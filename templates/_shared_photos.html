@@ -1,0 +1,31 @@
+{% if shared_photos %}
+<div class="timeline-post">
+    <div class="post-header">
+        <div class="post-author">
+            <div class="post-author-photo attachment-icon">
+                <i class="fas fa-images"></i>
+            </div>
+            <div class="post-author-info">
+                <h3>Fotos Especiais Compartilhadas</h3>
+                <p class="post-type">
+                    <i class="fas fa-camera"></i>
+                    {{ shared_photos|length }} foto(s) especiais
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="post-content">
+        <div class="photo-gallery">
+            {% for photo in shared_photos %}
+            <div class="gallery-photo-item">
+                <img src="{{ url_for('serve_media', filename=photo.photo_path) }}" 
+                     alt="Foto Especial" 
+                     class="gallery-photo"
+                     onclick="openPhotoModal('{{ url_for('serve_media', filename=photo.photo_path) }}')">
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+

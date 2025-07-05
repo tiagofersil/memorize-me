@@ -1,0 +1,29 @@
+{% extends "loyout.html" %}
+
+{% block title %}Pagamento Aprovado - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="main-card text-center">
+    <div class="card-header">
+        <h1 class="card-title text-success">✅ Pagamento realizado com sucesso!</h1>
+    </div>
+    <div class="card-body">
+        <p class="text-lg text-gray-700 mb-6">Seu pagamento foi aprovado e processado. Agora você pode acessar todas as funcionalidades do seu memorial.</p>
+        
+        <div class="next-steps mb-8">
+            <h3 class="text-xl font-semibold mb-4">Próximos passos:</h3>
+            <ul class="list-disc list-inside text-left mx-auto" style="max-width: 400px;">
+                <li class="mb-2">Acesse seus memoriais na área do cliente</li>
+                <li class="mb-2">Baixe o QR Code para usar na lápide ou urna</li>
+                <li>Adicione mais fotos e conteúdo ao memorial</li>
+            </ul>
+        </div>
+        
+        <div class="actions flex justify-center gap-4">
+            <a href="/memorial" class="btn btn-primary btn-lg">Ver Meus Memoriais</a>
+            <a href="/profile" class="btn btn-secondary btn-lg">Ir para Perfil</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

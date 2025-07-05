@@ -1,0 +1,949 @@
+{% extends "loyout.html" %}
+
+{% block title %}Editar Memorial - Memorial Online{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/memorial_improvements.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline_improvements.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="edit-memorial-container">
+    <div class="edit-header">
+        <h1 class="edit-title">Editar Memorial Dona nice</h1>
+        <p class="edit-subtitle">Personalize o memorial do seu ente querido com fotos, histórias e memórias especiais</p>
+    </div>
+
+    <form method="POST" enctype="multipart/form-data" class="memorial-form">
+        <!-- Informações Básicas -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-user"></i>
+                Informações Básicas
+            </h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="name" class="form-label">Nome Completo</label>
+                    <input type="text" id="name" name="name" class="form-input" value="{{ memorial.name if memorial else '' }}" required>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="birth_date" class="form-label">Data de Nascimento</label>
+                    <input type="date" id="birth_date" name="birth_date" class="form-input" value="{{ memorial.birth_date if memorial else '' }}">
+                </div>
+                <div class="form-group">
+                    <label for="death_date" class="form-label">Data de Falecimento</label>
+                    <input type="date" id="death_date" name="death_date" class="form-input" value="{{ memorial.death_date if memorial else '' }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- Foto de Perfil -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-portrait"></i>
+                Foto de Perfil
+            </h2>
+            
+            <div class="profile-photo-section">
+                <div class="profile-photo-preview">
+                    <div class="photo-placeholder" id="profile-preview">
+                        {% if memorial and memorial.profile_photo_path %}
+                            <img src="{{ url_for('serve_media', filename=memorial.profile_photo_path) }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                        {% else %}
+                            <i class="fas fa-user-circle"></i>
+                            <span>Foto de Perfil</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="profile-photo-upload">
+                    <label for="profile_photo" class="form-label">Escolher Foto de Perfil</label>
+                    <input type="file" id="profile_photo" name="profile_photo" class="form-input" accept="image/*">
+                    <p class="form-help">Recomendamos uma foto de rosto em boa qualidade</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Foto de Capa -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-image"></i>
+                Foto de Capa
+            </h2>
+            
+            <div class="cover-photo-section">
+                <div class="cover-photo-preview">
+                    <div class="cover-placeholder" id="cover-preview">
+                        {% if memorial and memorial.cover_photo_path %}
+                            <img src="{{ url_for('serve_media', filename=memorial.cover_photo_path) }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        {% else %}
+                            <i class="fas fa-mountain"></i>
+                            <span>Foto de Capa</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="cover-photo-upload">
+                    <label for="cover_photo" class="form-label">Escolher Foto de Capa</label>
+                    <input type="file" id="cover_photo" name="cover_photo" class="form-input" accept="image/*">
+                    <p class="form-help">Uma imagem que represente a pessoa ou momentos especiais (recomendado: 1200x400px)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bibliografia -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-book"></i>
+                Bibliografia
+            </h2>
+            
+            <div class="form-group">
+                <label for="biography" class="form-label">História de Vida</label>
+                <textarea id="biography" name="biography" class="form-textarea" rows="8" placeholder="Conte a história de vida, conquistas, momentos especiais e o que tornava essa pessoa única...">{{ memorial.biography if memorial else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Galeria de Fotos -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-images"></i>
+                Galeria de Memórias (até 10 fotos)
+            </h2>
+            
+            <div class="photo-gallery-grid">
+                {% for i in range(1, 11) %}
+                <div class="photo-upload-slot" data-slot="{{ i }}">
+                    <div class="photo-preview" id="photo-preview-{{ i }}">
+                        {% set existing_photo = photos[i-1] if photos and photos|length >= i else None %}
+                        {% if existing_photo %}
+                            <img src="{{ url_for('serve_media', filename=existing_photo.photo_path) }}" 
+                                 alt="Foto {{ i }}" 
+                                 class="gallery-photo-img"
+                                 data-photo-id="{{ existing_photo.id }}">
+                            <button type="button" class="btn-delete-gallery-photo" onclick="deleteGalleryPhoto({{ existing_photo.id }}, {{ i }})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        {% else %}
+                            <i class="fas fa-plus"></i>
+                            <span>Foto {{ i }}</span>
+                        {% endif %}
+                    </div>
+                    <input type="file" id="photo_{{ i }}" name="photo_{{ i }}" class="photo-input" accept="image/*" onchange="previewGalleryPhoto(this, {{ i }})">
+                    <label for="photo_{{ i }}" class="photo-label">
+                        {% if existing_photo %}
+                            Substituir Foto
+                        {% else %}
+                            Escolher Foto
+                        {% endif %}
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <p class="form-help">
+                <i class="fas fa-info-circle"></i>
+                Adicione fotos que representem momentos especiais, família, amigos e memórias importantes
+            </p>
+        </div>
+
+        <!-- Mensagem da Família -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-heart"></i>
+                Mensagem da Família
+            </h2>
+            
+            <div class="form-group">
+                <label for="family_message" class="form-label">Mensagem de Amor e Saudade</label>
+                <textarea id="family_message" name="family_message" class="form-textarea" rows="6" placeholder="Escreva uma mensagem especial da família, expressando amor, saudade e gratidão...">{{ memorial.family_message if memorial else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Linha do Tempo -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-clock"></i>
+                Linha do Tempo (Eventos Importantes)
+            </h2>
+            <div class="form-group">
+                <label for="timeline_events" class="form-label">Eventos (um por linha, formato: AAAA-MM-DD - Descrição)</label>
+                <textarea id="timeline_events" name="timeline_events" class="form-textarea" rows="8" placeholder="Ex:&#10;1950-01-15 - Nascimento&#10;1975-06-20 - Casamento com [Nome]&#10;2000-03-10 - Nascimento do primeiro neto">{{ memorial.timeline_events if memorial else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Música do Memorial -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-music"></i>
+                Música do Memorial
+            </h2>
+            <div class="form-group">
+                <label for="music_embed_url" class="form-label">URL de Embed do Spotify/YouTube</label>
+                <input type="text" id="music_embed_url" name="music_embed_url" class="form-input" value="{{ memorial.music_embed_url if memorial else '' }}" placeholder="Ex: https://open.spotify.com/embed/track/... ou https://www.youtube.com/embed/...">
+                <p class="form-help">Cole o link de incorporação (embed) da música ou playlist favorita.</p>
+            </div>
+        </div>
+
+        <!-- Depoimentos em Destaque -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-quote-right"></i>
+                Depoimentos em Destaque
+            </h2>
+            <div class="form-group">
+                <label for="featured_testimonials" class="form-label">Depoimentos (um por linha)</label>
+                <textarea id="featured_testimonials" name="featured_testimonials" class="form-textarea" rows="8" placeholder="Ex:&#10;"Sua alegria era contagiante." - Amigo&#10;"Sempre me inspirou a ser melhor." - Filho">{{ memorial.featured_testimonials if memorial else '' }}</textarea>
+                <p class="form-help">Depoimentos que serão exibidos em rotação na página do memorial.</p>
+            </div>
+        </div>
+
+        <!-- Localização do Sepultamento -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Localização do Sepultamento
+            </h2>
+            <div class="form-group">
+                <label for="burial_location" class="form-label">Endereço ou Link do Google Maps</label>
+                <input type="text" id="burial_location" name="burial_location" class="form-input" value="{{ memorial.burial_location if memorial else '' }}" placeholder="Ex: Cemitério da Saudade, Rua das Flores, 123 ou link do Google Maps">
+                <p class="form-help">Endereço do local de descanso ou link direto para o Google Maps.</p>
+            </div>
+        </div>
+
+        <!-- Doações em Memória -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-hand-holding-heart"></i>
+                Doações em Memória
+            </h2>
+            <div class="form-group">
+                <label for="donation_link" class="form-label">Link para Doação (ONG/Causa)</label>
+                <input type="url" id="donation_link" name="donation_link" class="form-input" value="{{ memorial.donation_link if memorial else '' }}" placeholder="Ex: https://www.ongexemplo.org/doar">
+                <p class="form-help">Link para uma organização ou causa que a pessoa apoiava.</p>
+            </div>
+        </div>
+
+        <!-- Livros, Frases ou Valores -->
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-lightbulb"></i>
+                Livros, Frases ou Valores
+            </h2>
+            <div class="form-group">
+                <label for="quotes_values" class="form-label">Frases, Livros ou Valores (um por linha)</label>
+                <textarea id="quotes_values" name="quotes_values" class="form-textarea" rows="6" placeholder="Ex:&#10;Frase favorita: 'A vida é bela.'&#10;Livro: 'O Pequeno Príncipe'&#10;Valor: Honestidade">{{ memorial.quotes_values if memorial else '' }}</textarea>
+                <p class="form-help">Citações marcantes, livros importantes ou valores que representavam a pessoa.</p>
+            </div>
+        </div>
+
+        <!-- Fotos Atuais (se existirem) -->
+        {% if photos %}
+        <div class="form-section">
+            <h2 class="section-title">
+                <i class="fas fa-folder-open"></i>
+                Fotos Atuais
+            </h2>
+            
+            <div class="current-photos-grid">
+                {% for photo in photos %}
+                <div class="current-photo-item">
+                    <img src="{{ url_for('serve_media', filename=photo.photo_path) }}" alt="Memorial Photo">
+                    <div class="photo-actions">
+                        <button type="button" class="btn-delete-photo" onclick="deletePhoto({{ photo.id }})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Ações -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-secondary btn-lg">
+                <i class="fas fa-save"></i>
+                Salvar Alterações
+            </button>
+            <button type="button" class="btn btn-success btn-lg" id="generate-memorial">
+                <i class="fas fa-magic"></i>
+                Gerar Memorial Online
+            </button>
+
+        </div>
+    </form>
+</div>
+
+<style>
+.edit-memorial-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.edit-header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+    padding: var(--spacing-8);
+    background: white;
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+}
+
+.edit-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.edit-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.memorial-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+}
+
+.form-section {
+    background: white;
+    padding: var(--spacing-8);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.section-title i {
+    color: var(--accent-color);
+    font-size: var(--font-size-lg);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-6);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-2);
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.form-input, .form-textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: all 0.2s ease;
+    background-color: white;
+}
+
+.form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.form-help {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+    margin-top: var(--spacing-2);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+/* Profile Photo Section */
+.profile-photo-section {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: var(--spacing-8);
+    align-items: start;
+}
+
+.profile-photo-preview {
+    display: flex;
+    justify-content: center;
+}
+
+.photo-placeholder {
+    width: 150px;
+    height: 150px;
+    background: var(--gray-100);
+    border: 2px dashed var(--gray-300);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.photo-placeholder i {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-2);
+}
+
+.photo-placeholder:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+/* Questions Grid */
+.questions-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-6);
+}
+
+.questions-grid .form-group {
+    margin-bottom: 0;
+}
+
+.questions-grid .form-label {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.questions-grid .form-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Photo Gallery Grid */
+.photo-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.photo-upload-slot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.photo-preview {
+    width: 120px;
+    height: 120px;
+    background: var(--gray-50);
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: var(--font-size-xs);
+    text-align: center;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-preview:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    background: var(--gray-100);
+}
+
+.photo-preview i {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-1);
+}
+
+.gallery-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+.btn-delete-gallery-photo {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--error-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+    font-size: 12px;
+}
+
+.btn-delete-gallery-photo:hover {
+    background: var(--error-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.photo-input {
+    display: none;
+}
+
+.photo-label {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    cursor: pointer;
+    padding: var(--spacing-1) var(--spacing-2);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.photo-label:hover {
+    color: var(--accent-color);
+    background: var(--gray-100);
+}
+
+/* Current Photos Grid */
+.current-photos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--spacing-4);
+}
+
+.current-photo-item {
+    position: relative;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.2s ease;
+}
+
+.current-photo-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.current-photo-item img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.photo-actions {
+    position: absolute;
+    top: var(--spacing-2);
+    right: var(--spacing-2);
+}
+
+.btn-delete-photo {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--error-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-delete-photo:hover {
+    background: var(--error-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: var(--spacing-4);
+    justify-content: center;
+    padding: var(--spacing-8);
+    background: white;
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.btn-lg {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+#generate-memorial {
+    background: linear-gradient(135deg, var(--success-color) 0%, #48bb78 100%);
+    border: none;
+    color: white;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+#generate-memorial:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, #48bb78 0%, var(--success-color) 100%);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-photo-section,
+    .cover-photo-section {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .photo-gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .edit-header {
+        padding: var(--spacing-6);
+    }
+    
+    .form-section {
+        padding: var(--spacing-6);
+    }
+}
+
+@media (max-width: 480px) {
+    .photo-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .current-photos-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cover Photo Section */
+.cover-photo-section {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--spacing-6);
+    align-items: start;
+}
+
+.cover-photo-preview {
+    display: flex;
+    justify-content: center;
+}
+
+.cover-placeholder {
+    width: 300px;
+    height: 100px;
+    background: var(--gray-100);
+    border: 2px dashed var(--gray-300);
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.cover-placeholder i {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-1);
+}
+
+.cover-placeholder:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.cover-photo-upload {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+</style>
+
+<script>
+// Preview de fotos
+function setupPhotoPreview() {
+    // Profile photo preview
+    const profileInput = document.getElementById('profile_photo');
+    const profilePreview = document.getElementById('profile-preview');
+    
+    profileInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePreview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Cover photo preview
+    const coverInput = document.getElementById('cover_photo');
+    const coverPreview = document.getElementById('cover-preview');
+    
+    coverInput.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                coverPreview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Gallery photos preview
+    for (let i = 1; i <= 10; i++) {
+        const input = document.getElementById(`photo_${i}`);
+        const preview = document.getElementById(`photo-preview-${i}`);
+        
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.innerHTML = `<img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover; border-radius: var(--border-radius);">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Click on preview to open file dialog
+        preview.addEventListener('click', function() {
+            input.click();
+        });
+    }
+}
+
+// Generate memorial functionality
+function setupGenerateMemorial() {
+    const generateBtn = document.getElementById('generate-memorial');
+    
+    generateBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Check if basic fields are filled
+        const name = document.getElementById('name').value;
+        const biography = document.getElementById('biography').value;
+        
+        if (!name.trim()) {
+            alert('Por favor, preencha o nome antes de gerar o memorial.');
+            return;
+        }
+        
+        if (!biography.trim()) {
+            alert('Por favor, preencha a biografia antes de gerar o memorial.');
+            return;
+        }
+        
+        // Show loading state
+        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Gerando Memorial...';
+        generateBtn.disabled = true;
+        
+        // Simulate memorial generation (replace with actual logic)
+        setTimeout(() => {
+            alert('Memorial gerado com sucesso! Você será redirecionado para visualizar o resultado.');
+            
+            // Reset button
+            generateBtn.innerHTML = '<i class="fas fa-magic"></i> Gerar Memorial Online';
+            generateBtn.disabled = false;
+            
+            // Redirect to memorial view (replace with actual URL)
+            // window.location.href = 
+            // window.location.href = `/memorial/${memorialId}`;
+        }, 2000);
+    });
+}
+
+// Function to preview gallery photos
+function previewGalleryPhoto(input, slotNumber) {
+    const file = input.files[0];
+    const preview = document.getElementById(`photo-preview-${slotNumber}`);
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <img src="${e.target.result}" 
+                     alt="Foto ${slotNumber}" 
+                     class="gallery-photo-img">
+                <button type="button" class="btn-delete-gallery-photo" onclick="clearGalleryPhoto(${slotNumber})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            preview.style.border = 'none';
+            
+            // Update label text
+            const label = document.querySelector(`label[for="photo_${slotNumber}"]`);
+            if (label) {
+                label.textContent = 'Substituir Foto';
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// Function to clear gallery photo preview (for new uploads)
+function clearGalleryPhoto(slotNumber) {
+    const input = document.getElementById(`photo_${slotNumber}`);
+    const preview = document.getElementById(`photo-preview-${slotNumber}`);
+    const label = document.querySelector(`label[for="photo_${slotNumber}"]`);
+    
+    // Clear the input
+    input.value = '';
+    
+    // Reset preview to default state
+    preview.innerHTML = `
+        <i class="fas fa-plus"></i>
+        <span>Foto ${slotNumber}</span>
+    `;
+    preview.style.border = '2px dashed var(--gray-300)';
+    
+    // Reset label text
+    if (label) {
+        label.textContent = 'Escolher Foto';
+    }
+}
+
+// Function to delete existing gallery photos
+function deleteGalleryPhoto(photoId, slotNumber) {
+    if (confirm("Tem certeza que deseja excluir esta foto?")) {
+        fetch(`/memorial/delete_gallery_photo/${photoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Reset the slot to empty state
+                const preview = document.getElementById(`photo-preview-${slotNumber}`);
+                const label = document.querySelector(`label[for="photo_${slotNumber}"]`);
+                
+                preview.innerHTML = `
+                    <i class="fas fa-plus"></i>
+                    <span>Foto ${slotNumber}</span>
+                `;
+                preview.style.border = '2px dashed var(--gray-300)';
+                
+                if (label) {
+                    label.textContent = 'Escolher Foto';
+                }
+                
+                alert("Foto excluída com sucesso!");
+            } else {
+                alert("Erro ao excluir foto: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Erro:", error);
+            alert("Erro ao excluir foto.");
+        });
+    }
+}
+
+// Function to handle photo deletion
+function deletePhoto(photoId) {
+    if (confirm("Tem certeza que deseja excluir esta foto?")) {
+        fetch(`/delete_photo/${photoId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert("Foto excluída com sucesso!");
+                window.location.reload(); // Recarrega a página para atualizar a galeria
+            } else {
+                alert("Erro ao excluir foto: " + data.message);
+            }
+        })
+        .catch(error => {
+            console.error("Erro:", error);
+            alert("Erro ao excluir foto.");
+        });
+    }
+}
+
+// Initialize functions on document ready
+document.addEventListener("DOMContentLoaded", function() {
+    setupPhotoPreview();
+    setupGenerateMemorial();
+
+    // Check if memorial was already generated and update button state
+    const memorialId = "{{ memorial.id if memorial else '' }}"; // Assuming memorial.id is available
+    if (memorialId) {
+        const generatedKey = `memorial_${memorialId}_generated`;
+        if (localStorage.getItem(generatedKey) === 'true') {
+            const generateBtn = document.getElementById('generate-memorial');
+            if (generateBtn) {
+                generateBtn.innerHTML = '<i class="fas fa-check-circle"></i> Memorial Gerado';
+                generateBtn.disabled = true;
+                generateBtn.style.background = '#6c757d'; // Gray out the button
+                generateBtn.style.cursor = 'not-allowed';
+            }
+        }
+    }
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/biography_formatter.js') }}"></script>
+{% endblock %}

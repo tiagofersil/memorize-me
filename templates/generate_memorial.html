@@ -1,0 +1,1788 @@
+{% extends "loyout.html" %}
+
+{% block title %}Memorial Público - Memorial Online{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/memorial_improvements.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timeline_improvements.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="memorial-container">
+    <!-- Hero Section com Capa em Largura Total -->
+    <div class="hero-section-fullwidth">
+        <!-- Foto de Capa como Background -->
+        <div class="cover-background">
+            {% if memorial and memorial.cover_photo_path %}
+                <img src="{{ url_for('serve_media', filename=memorial.cover_photo_path) }}" alt="Foto de Capa" class="cover-image">
+            {% else %}
+                <div class="cover-placeholder">
+                    <i class="fas fa-mountain"></i>
+                    <span>Foto de Capa</span>
+                </div>
+            {% endif %}
+            <div class="cover-overlay"></div>
+        </div>
+
+        <!-- Conteúdo do Hero -->
+        <div class="hero-content">
+            <!-- Foto de Perfil Centralizada e Redonda -->
+            <div class="profile-photo-hero">
+                {% if memorial and memorial.profile_photo_path %}
+                    <img src="{{ url_for('serve_media', filename=memorial.profile_photo_path) }}" alt="Foto de Perfil">
+                {% else %}
+                    <div class="profile-placeholder">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Informações Principais -->
+            <div class="hero-info">
+                <h1 class="person-name-hero">{{ memorial.name if memorial else 'Nome Completo' }}</h1>
+                <p class="dates-hero">{{ memorial.birth_date if memorial else 'DD/MM/AAAA' }} - {{ memorial.death_date if memorial else 'DD/MM/AAAA' }}</p>
+                <div class="family-message-hero">
+                    <i class="fas fa-quote-left"></i>
+                    <p>"{{ memorial.family_message if memorial else 'Uma vida de amor e memórias.' }}"</p>
+                    <i class="fas fa-quote-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layout com Barra Lateral Abaixo da Capa -->
+    <div class="content-layout">
+        <!-- Barra Lateral -->
+        <div class="sidebar">
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h3 class="qr-title">Compartilhe este Memorial</h3>
+                <div class="qr-code-container">
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code do Memorial" class="qr-code-image">
+                </div>
+                <p class="qr-description">Escaneie o QR Code para acessar este memorial em qualquer dispositivo</p>
+                <button class="btn btn-share" id="share-memorial">
+                    <i class="fas fa-share-alt"></i>
+                    Compartilhar Link
+                </button>
+            </div>
+
+            <!-- Música do Memorial -->
+            {% if memorial and memorial.music_embed_url %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-title"><i class="fas fa-music"></i> Música do Memorial</h3>
+                <div class="music-embed">
+                    <a href="{{ memorial.music_embed_url }}" target="_blank" class="btn btn-primary btn-sm">Ouvir Música no YouTube</a>
+                </div>
+                <p class="music-description">Uma música especial em memória de {{ memorial.name }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Depoimentos em Destaque -->
+            {% if memorial and memorial.featured_testimonials %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-title"><i class="fas fa-quote-left"></i> Depoimentos em Destaque</h3>
+                <div class="testimonials-sidebar">
+                    {% for testimonial in memorial.featured_testimonials.split('\n') %}
+                        {% if testimonial.strip() %}
+                            <div class="testimonial-item-sidebar">
+                                <blockquote class="testimonial-quote-sidebar">"{{ testimonial }}"</blockquote>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Localização do Sepultamento -->
+            {% if memorial and memorial.burial_location %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-title"><i class="fas fa-map-marker-alt"></i> Localização do Sepultamento</h3>
+                <div class="burial-location-sidebar">
+                    <p class="location-text">{{ memorial.burial_location }}</p>
+                    <div class="location-map-embed">
+                        <iframe src="{{ memorial.burial_location }}" width="100%" height="250" frameborder="0" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Doações em Memória -->
+            {% if memorial and memorial.donation_link %}
+            <div class="sidebar-card">
+                <h3 class="sidebar-title"><i class="fas fa-heart"></i> Doações em Memória</h3>
+                <div class="donations-sidebar">
+                    <p class="donations-text">Em memória de {{ memorial.name }}, considere fazer uma doação para uma causa que ele(a) apoiava:</p>
+                    <a href="{{ memorial.donation_link }}" target="_blank" class="btn btn-primary btn-sm">Fazer Doação</a>
+                </div>
+            </div>
+            {% endif %}
+            
+            <!-- Estatísticas do Memorial -->
+            <div class="memorial-stats">
+                <h4>Estatísticas do Memorial</h4>
+                <div class="stat-item">
+                    <i class="fas fa-eye"></i>
+                    <span>Visualizações: <strong id="view-count">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Velas Acesas: <strong id="candle-count">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-leaf"></i>
+                    <span>Flores Deixadas: <strong id="flower-count">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-comment"></i>
+                    <span>Mensagens: <strong id="message-count">0</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteúdo Principal -->
+        <div class="main-content">
+            <div class="public-memorial-container">
+                <!-- Seções de Conteúdo -->
+                <div class="memorial-details">
+                    <!-- Galeria de Memórias - MOVIDA PARA SEÇÃO PRINCIPAL -->
+                    {% if photos %}
+                    <div class="section gallery-section">
+                        <h2 class="section-title"><i class="fas fa-images"></i> Galeria de Memórias</h2>
+                        <div class="main-gallery">
+                            {% for photo in photos %}
+                            <div class="gallery-item" data-index="{{ loop.index0 }}">
+                                <img src="{{ url_for('serve_media', filename=photo.photo_path) }}" alt="Memória {{ loop.index }}" class="gallery-image">
+                                <div class="gallery-overlay">
+                                    <i class="fas fa-expand-alt"></i>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="section biography-section">
+                        <h2 class="section-title"><i class="fas fa-book"></i> Biografia</h2>
+                        <div class="biography-formatted">
+                            <p>{{ memorial.biography if memorial else 'Nenhuma biografia disponível.' }}</p>
+                        </div>
+                    </div>
+
+                    {% if memorial and memorial.timeline_events %}
+                    <div class="section timeline-section">
+                        <h2 class="section-title"><i class="fas fa-clock"></i> Linha do Tempo</h2>
+                        <ul class="timeline-list">
+                            {% for event in memorial.timeline_events.split('\n') %}
+                                {% if event.strip() %}
+                                    <li>{{ event }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    {% if memorial and memorial.quotes_values %}
+                    <div class="section quotes-section">
+                        <h2 class="section-title"><i class="fas fa-lightbulb"></i> Frases, Livros e Valores</h2>
+                        <ul class="quotes-list">
+                            {% for item in memorial.quotes_values.split('\n') %}
+                                {% if item.strip() %}
+                                    <li>{{ item }}</li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+
+                    <!-- Área de Homenagens Ativas - DESIGN MELHORADO -->
+                    <div class="section active-tributes-section">
+                        <h2 class="section-title"><i class="fas fa-heart"></i> Homenagens Ativas</h2>
+                        <div class="tributes-container">
+                            <div class="tributes-area candles-area">
+                                <div class="tribute-header">
+                                    <div class="tribute-icon">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h3>Velas Acesas</h3>
+                                    <p class="tribute-counter" id="candles-counter">Nenhuma vela acesa no momento</p>
+                                </div>
+                                <div class="tributes-grid" id="candles-grid">
+                                    <!-- Velas serão adicionadas dinamicamente aqui -->
+                                </div>
+                            </div>
+                            
+                            <div class="tributes-area flowers-area">
+                                <div class="tribute-header">
+                                    <div class="tribute-icon">
+                                        <i class="fas fa-leaf"></i>
+                                    </div>
+                                    <h3>Flores Deixadas</h3>
+                                    <p class="tribute-counter" id="flowers-counter">Nenhuma flor deixada no momento</p>
+                                </div>
+                                <div class="tributes-grid" id="flowers-grid">
+                                    <!-- Flores serão adicionadas dinamicamente aqui -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Novos Campos: Vela, Flor e Mensagem -->
+                    <div class="section tributes-section">
+                        <h2 class="section-title"><i class="fas fa-heart"></i> Deixe sua Homenagem</h2>
+                        <div class="tribute-options">
+                            <button class="btn btn-tribute candle-btn" id="light-candle">
+                                <div class="btn-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="btn-content">
+                                    <span class="btn-title">Acender Vela</span>
+                                    <span class="btn-subtitle">Uma luz em sua memória</span>
+                                </div>
+                            </button>
+                            <button class="btn btn-tribute flower-btn" id="leave-flower">
+                                <div class="btn-icon">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <div class="btn-content">
+                                    <span class="btn-title">Deixar Flor</span>
+                                    <span class="btn-subtitle">Uma flor em sua homenagem</span>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Seção de Comentários -->
+                    <div class="section comments-section">
+                        <h2 class="section-title"><i class="fas fa-comments"></i> Livro de Condolências</h2>
+                        <div class="comment-form">
+                            <div class="form-group">
+                                <label for="visitor_name" class="form-label">Seu Nome:</label>
+                                <input type="text" id="visitor_name" name="visitor_name" class="form-input" placeholder="Digite seu nome (opcional)">
+                            </div>
+                            <div class="form-group">
+                                <label for="visitor_message" class="form-label">Sua Mensagem:</label>
+                                <textarea id="visitor_message" name="visitor_message" class="form-textarea" rows="4" placeholder="Deixe uma mensagem de condolências ou compartilhe uma memória especial..."></textarea>
+                            </div>
+                            <button class="btn btn-primary" id="send-comment">Enviar Mensagem</button>
+                        </div>
+                        
+                        <div class="comments-list" id="comments-list">
+                            <!-- Comentários serão adicionados dinamicamente aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Container principal */
+.memorial-container {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+/* Hero Section em Largura Total */
+.hero-section-fullwidth {
+    position: relative;
+    width: 100vw;
+    height: 500px;
+    margin-left: calc(-50vw + 50%);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.cover-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cover-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--turquoise-100), var(--turquoise-200));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+    font-size: var(--font-size-lg);
+    text-align: center;
+}
+
+.cover-placeholder i {
+    font-size: 4rem;
+    margin-bottom: var(--spacing-2);
+}
+
+.cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.1) 50%,
+        rgba(0, 0, 0, 0.7) 100%
+    );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    padding: var(--spacing-8);
+}
+
+/* Foto de Perfil Perfeitamente Redonda */
+.profile-photo-hero {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: var(--spacing-6);
+    border: 6px solid white;
+    box-shadow: var(--shadow-xl);
+    background: white;
+    transition: transform 0.3s ease;
+    position: relative;
+}
+
+.profile-photo-hero:hover {
+    transform: scale(1.05);
+}
+
+.profile-photo-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--gray-100);
+    color: var(--gray-400);
+    border-radius: 50%;
+}
+
+.profile-placeholder i {
+    font-size: 6rem;
+}
+
+.hero-info {
+    text-align: center;
+    max-width: 600px;
+}
+
+.person-name-hero {
+    font-size: var(--font-size-4xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-3);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out;
+}
+
+.dates-hero {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-6);
+    opacity: 0.9;
+    font-weight: 500;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out 0.2s both;
+}
+
+.family-message-hero {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-style: italic;
+    opacity: 0.95;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out 0.4s both;
+}
+
+.family-message-hero i {
+    color: var(--turquoise-300);
+    font-size: var(--font-size-base);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Layout de Conteúdo com Barra Lateral */
+.content-layout {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    gap: var(--spacing-8);
+    padding: var(--spacing-8);
+    margin-top: var(--spacing-8);
+}
+
+/* Barra Lateral */
+.sidebar {
+    width: 350px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.qr-section {
+    background: white;
+    padding: var(--spacing-6);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    text-align: center;
+}
+
+.qr-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.qr-code-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--spacing-4);
+}
+
+.qr-code-image {
+    width: 150px;
+    height: 150px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-2);
+}
+
+.qr-description {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-4);
+    line-height: 1.5;
+}
+
+.btn-share {
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    padding: var(--spacing-3) var(--spacing-4);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin: 0 auto;
+}
+
+.btn-share:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.sidebar-card {
+    background: white;
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.sidebar-title {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.sidebar-title i {
+    color: var(--turquoise-500);
+}
+
+/* Música na Sidebar */
+.music-embed {
+    margin-bottom: var(--spacing-3);
+}
+
+.music-description {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    text-align: center;
+    margin: 0;
+}
+
+/* Depoimentos na Sidebar */
+.testimonials-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.testimonial-item-sidebar {
+    background: var(--gray-50);
+    padding: var(--spacing-3);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--turquoise-500);
+}
+
+.testimonial-quote-sidebar {
+    font-style: italic;
+    margin: 0;
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+/* Localização na Sidebar */
+.burial-location-sidebar {
+    text-align: center;
+}
+
+.location-text {
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-3);
+}
+
+.location-map-embed {
+    width: 100%;
+    height: 250px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.location-map-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Doações na Sidebar */
+.donations-sidebar {
+    text-align: center;
+}
+
+.donations-text {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-3);
+}
+
+.memorial-stats {
+    background: white;
+    padding: var(--spacing-6);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+}
+
+.memorial-stats h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+    padding-bottom: var(--spacing-2);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3) 0;
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.stat-item i {
+    color: var(--accent-color);
+    width: 16px;
+    text-align: center;
+}
+
+.stat-item strong {
+    color: var(--gray-800);
+}
+
+/* Conteúdo Principal */
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Estilos gerais para o memorial público */
+.public-memorial-container {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* Seções de Conteúdo */
+.memorial-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-8);
+}
+
+.section {
+    background: white;
+    padding: var(--spacing-8);
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.section:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 2px solid var(--gray-100);
+}
+
+.section-title i {
+    color: var(--accent-color);
+    font-size: var(--font-size-xl);
+}
+
+/* NOVA GALERIA PRINCIPAL */
+.gallery-section {
+    background: white;
+}
+
+.main-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--spacing-4);
+    margin-top: var(--spacing-4);
+}
+
+.gallery-item {
+    position: relative;
+    aspect-ratio: 1;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.gallery-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.gallery-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .gallery-image {
+    transform: scale(1.05);
+}
+
+.gallery-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-item:hover .gallery-overlay {
+    opacity: 1;
+}
+
+.gallery-overlay i {
+    color: white;
+    font-size: var(--font-size-2xl);
+}
+
+.biography-section p {
+    font-size: var(--font-size-base);
+    line-height: 1.8;
+    color: var(--gray-700);
+}
+
+.timeline-list,
+.quotes-list {
+    list-style: none;
+    padding: 0;
+}
+
+.timeline-list li,
+.quotes-list li {
+    background: var(--gray-50);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-3);
+    font-size: var(--font-size-base);
+    color: var(--gray-700);
+    border-left: 4px solid var(--accent-color);
+    transition: transform 0.2s ease;
+}
+
+.timeline-list li:hover,
+.quotes-list li:hover {
+    transform: translateX(5px);
+}
+
+/* DESIGN MELHORADO DAS HOMENAGENS */
+.tributes-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
+    margin-top: var(--spacing-6);
+}
+
+.tributes-area {
+    background: var(--gray-50);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-6);
+    text-align: center;
+    border: 2px solid var(--gray-100);
+    transition: all 0.3s ease;
+}
+
+.tributes-area:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.tribute-header {
+    margin-bottom: var(--spacing-6);
+}
+
+.tribute-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--accent-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-3);
+    transition: transform 0.3s ease;
+}
+
+.tribute-icon i {
+    color: white;
+    font-size: var(--font-size-xl);
+}
+
+.tributes-area:hover .tribute-icon {
+    transform: scale(1.1);
+}
+
+.tribute-header h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.tribute-counter {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-style: italic;
+}
+
+.tributes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: var(--spacing-4);
+    min-height: 120px;
+    padding: var(--spacing-4);
+    background: white;
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed var(--gray-300);
+}
+
+.tribute-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    transition: all 0.3s ease;
+}
+
+.tribute-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.candle-item {
+    animation: candleFlicker 2s ease-in-out infinite alternate;
+}
+
+.candle-flame {
+    font-size: 2.5rem;
+    color: #ff6b35;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.6));
+}
+
+.flower-item {
+    animation: flowerSway 3s ease-in-out infinite alternate;
+}
+
+.flower-bloom {
+    font-size: 2.5rem;
+    color: #e91e63;
+    filter: drop-shadow(0 0 6px rgba(233, 30, 99, 0.4));
+}
+
+.tribute-timer {
+    font-size: var(--font-size-xs);
+    color: var(--gray-600);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 4px 8px;
+    border-radius: var(--border-radius-sm);
+    box-shadow: var(--shadow-sm);
+    font-weight: 500;
+}
+
+@keyframes candleFlicker {
+    0% { transform: scale(1) rotate(-1deg); }
+    50% { transform: scale(1.05) rotate(1deg); }
+    100% { transform: scale(1) rotate(-0.5deg); }
+}
+
+@keyframes flowerSway {
+    0% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+    100% { transform: rotate(-1deg); }
+}
+
+/* BOTÕES DE HOMENAGEM MELHORADOS */
+.tributes-section {
+    text-align: center;
+}
+
+.tribute-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-6);
+}
+
+.btn-tribute {
+    background: white;
+    border: 2px solid var(--gray-200);
+    color: var(--gray-700);
+    padding: var(--spacing-6);
+    border-radius: var(--border-radius-xl);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    text-align: left;
+    min-height: 100px;
+}
+
+.btn-tribute:hover {
+    border-color: var(--accent-color);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.candle-btn:hover {
+    background: linear-gradient(135deg, #fff5f0, #ffe4d6);
+    border-color: #ff6b35;
+}
+
+.flower-btn:hover {
+    background: linear-gradient(135deg, #fdf2f8, #fce7f3);
+    border-color: #e91e63;
+}
+
+.btn-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.btn-icon i {
+    font-size: var(--font-size-xl);
+    color: var(--gray-600);
+    transition: color 0.3s ease;
+}
+
+.candle-btn:hover .btn-icon {
+    background: #ff6b35;
+}
+
+.candle-btn:hover .btn-icon i {
+    color: white;
+}
+
+.flower-btn:hover .btn-icon {
+    background: #e91e63;
+}
+
+.flower-btn:hover .btn-icon i {
+    color: white;
+}
+
+.btn-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-1);
+}
+
+.btn-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.btn-subtitle {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-weight: 400;
+}
+
+/* Seção de Comentários */
+.comment-form {
+    background: var(--gray-50);
+    padding: var(--spacing-6);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-6);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-4);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--spacing-2);
+    font-weight: 500;
+    color: var(--gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    padding: var(--spacing-3) var(--spacing-4);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: all 0.2s ease;
+    background-color: white;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.1);
+}
+
+.form-textarea {
+    resize: vertical;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.comments-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.comment-item {
+    background: white;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s ease;
+}
+
+.comment-item:hover {
+    transform: translateY(-1px);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2);
+    padding-bottom: var(--spacing-2);
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.comment-author {
+    font-weight: 600;
+    color: var(--gray-800);
+    font-size: var(--font-size-sm);
+}
+
+.comment-date {
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+}
+
+.comment-message {
+    color: var(--gray-700);
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+/* MODAL CENTRALIZADO E MELHORADO */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: var(--spacing-8);
+    border-radius: var(--border-radius-xl);
+    width: 90%;
+    max-width: 450px;
+    box-shadow: var(--shadow-xl);
+    animation: slideIn 0.3s ease;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: var(--spacing-6);
+}
+
+.modal-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.modal-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--gray-600);
+}
+
+.duration-options {
+    display: grid;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-6);
+}
+
+.duration-option {
+    background: var(--gray-50);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-4);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.duration-option:hover {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.duration-option.selected {
+    background: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+}
+
+.duration-option strong {
+    display: block;
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-1);
+}
+
+.duration-option p {
+    margin: 0;
+    font-size: var(--font-size-sm);
+    opacity: 0.9;
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--spacing-3);
+    justify-content: center;
+}
+
+.btn-modal {
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 120px;
+}
+
+.btn-confirm {
+    background: var(--accent-color);
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-1px);
+}
+
+.btn-cancel {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.btn-cancel:hover {
+    background: var(--gray-300);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translate(-50%, -50%) scale(0.9);
+        opacity: 0;
+    }
+    to { 
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.btn-primary {
+    display: inline-block;
+    background-color: var(--accent-color);
+    color: white;
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: var(--turquoise-600);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-sm {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-sm);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .hero-section-fullwidth {
+        height: 400px;
+    }
+    
+    .profile-photo-hero {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .person-name-hero {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .content-layout {
+        flex-direction: column;
+        max-width: 900px;
+    }
+    
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .sidebar > * {
+        flex: 1;
+        min-width: 300px;
+    }
+    
+    .main-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+    
+    .tributes-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+}
+
+@media (max-width: 768px) {
+    .content-layout {
+        padding: var(--spacing-4);
+    }
+    
+    .sidebar {
+        flex-direction: column;
+    }
+    
+    .sidebar > * {
+        min-width: auto;
+    }
+    
+    .hero-section-fullwidth {
+        height: 350px;
+    }
+    
+    .profile-photo-hero {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .person-name-hero {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .dates-hero {
+        font-size: var(--font-size-lg);
+    }
+    
+    .family-message-hero {
+        font-size: var(--font-size-base);
+    }
+    
+    .section-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .main-gallery {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: var(--spacing-3);
+    }
+    
+    .tribute-options {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-4);
+    }
+    
+    .btn-tribute {
+        min-height: 80px;
+        padding: var(--spacing-4);
+    }
+    
+    .tributes-grid {
+        grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+        gap: var(--spacing-3);
+    }
+}
+
+@media (max-width: 480px) {
+    .content-layout {
+        padding: var(--spacing-2);
+    }
+    
+    .hero-section-fullwidth {
+        height: 300px;
+    }
+    
+    .hero-content {
+        padding: var(--spacing-4);
+    }
+    
+    .profile-photo-hero {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .person-name-hero {
+        font-size: var(--font-size-xl);
+    }
+    
+    .section {
+        padding: var(--spacing-4);
+    }
+    
+    .qr-code-image {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .family-message-hero {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .main-gallery {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .modal-content {
+        width: 95%;
+        padding: var(--spacing-6);
+    }
+    
+    .modal-title {
+        font-size: var(--font-size-xl);
+    }
+    
+    .btn-tribute {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-3);
+    }
+}
+</style>
+
+<!-- Modal para seleção de duração - CENTRALIZADO -->
+<div id="tribute-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">Acender Vela</h3>
+            <p class="modal-subtitle">Escolha por quanto tempo deseja manter sua homenagem ativa:</p>
+        </div>
+        <div class="duration-options" id="duration-options">
+            <div class="duration-option" data-duration="12h">
+                <strong>12 horas</strong>
+                <p>Homenagem temporária</p>
+            </div>
+            <div class="duration-option" data-duration="1d">
+                <strong>1 dia</strong>
+                <p>Homenagem de um dia</p>
+            </div>
+            <div class="duration-option" data-duration="7d">
+                <strong>7 dias</strong>
+                <p>Homenagem de uma semana</p>
+            </div>
+            <div class="duration-option" data-duration="forever">
+                <strong>Para sempre</strong>
+                <p>Homenagem permanente</p>
+            </div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-modal btn-cancel" id="modal-cancel">Cancelar</button>
+            <button class="btn-modal btn-confirm" id="modal-confirm">Confirmar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    let currentTributeType = '';
+    let selectedDuration = '';
+    let activeTributes = JSON.parse(localStorage.getItem('activeTributes')) || { candles: [], flowers: [] };
+    let comments = JSON.parse(localStorage.getItem('memorialComments')) || [];
+
+    // Elementos do DOM
+    const modal = document.getElementById('tribute-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const durationOptions = document.querySelectorAll('.duration-option');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
+    const candlesGrid = document.getElementById('candles-grid');
+    const flowersGrid = document.getElementById('flowers-grid');
+    const candlesCounter = document.getElementById('candles-counter');
+    const flowersCounter = document.getElementById('flowers-counter');
+    const commentsContainer = document.getElementById('comments-list');
+
+    // Inicializar página
+    updateTributesDisplay();
+    updateCounters();
+    displayComments();
+
+    // Event listeners para botões de homenagem
+    document.getElementById("light-candle").addEventListener("click", function() {
+        currentTributeType = 'candle';
+        modalTitle.textContent = 'Acender Vela';
+        showModal();
+    });
+
+    document.getElementById("leave-flower").addEventListener("click", function() {
+        currentTributeType = 'flower';
+        modalTitle.textContent = 'Deixar Flor';
+        showModal();
+    });
+
+    // Event listeners para opções de duração
+    durationOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            durationOptions.forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+            selectedDuration = this.dataset.duration;
+        });
+    });
+
+    // Event listeners para modal
+    modalConfirm.addEventListener('click', function() {
+        if (selectedDuration) {
+            addTribute(currentTributeType, selectedDuration);
+            hideModal();
+        } else {
+            alert('Por favor, selecione uma duração.');
+        }
+    });
+
+    modalCancel.addEventListener('click', hideModal);
+
+    // Fechar modal clicando fora
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            hideModal();
+        }
+    });
+
+    // Event listener para comentários
+    document.getElementById("send-comment").addEventListener("click", function() {
+        const name = document.getElementById("visitor_name").value.trim() || 'Visitante Anônimo';
+        const message = document.getElementById("visitor_message").value.trim();
+        
+        if (!message) {
+            alert("Por favor, escreva uma mensagem antes de enviar.");
+            return;
+        }
+
+        addComment(name, message);
+        document.getElementById("visitor_name").value = '';
+        document.getElementById("visitor_message").value = '';
+    });
+
+    // Funções do modal
+    function showModal() {
+        modal.style.display = 'block';
+        selectedDuration = '';
+        durationOptions.forEach(opt => opt.classList.remove('selected'));
+        document.body.style.overflow = 'hidden'; // Previne scroll do body
+    }
+
+    function hideModal() {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaura scroll do body
+    }
+
+    // Função para adicionar homenagem
+    function addTribute(type, duration) {
+        const now = new Date();
+        let expiresAt = null;
+
+        if (duration !== 'forever') {
+            expiresAt = new Date(now);
+            switch (duration) {
+                case '12h':
+                    expiresAt.setHours(expiresAt.getHours() + 12);
+                    break;
+                case '1d':
+                    expiresAt.setDate(expiresAt.getDate() + 1);
+                    break;
+                case '7d':
+                    expiresAt.setDate(expiresAt.getDate() + 7);
+                    break;
+            }
+        }
+
+        const tribute = {
+            id: Date.now(),
+            type: type,
+            duration: duration,
+            createdAt: now.toISOString(),
+            expiresAt: expiresAt ? expiresAt.toISOString() : null
+        };
+
+        if (type === 'candle') {
+            activeTributes.candles.push(tribute);
+        } else {
+            activeTributes.flowers.push(tribute);
+        }
+
+        localStorage.setItem('activeTributes', JSON.stringify(activeTributes));
+        updateTributesDisplay();
+        updateCounters();
+        updateStats();
+    }
+
+    // Função para atualizar exibição das homenagens
+    function updateTributesDisplay() {
+        // Limpar homenagens expiradas
+        const now = new Date();
+        activeTributes.candles = activeTributes.candles.filter(candle => 
+            !candle.expiresAt || new Date(candle.expiresAt) > now
+        );
+        activeTributes.flowers = activeTributes.flowers.filter(flower => 
+            !flower.expiresAt || new Date(flower.expiresAt) > now
+        );
+
+        // Atualizar localStorage
+        localStorage.setItem('activeTributes', JSON.stringify(activeTributes));
+
+        // Exibir velas
+        candlesGrid.innerHTML = '';
+        activeTributes.candles.forEach(candle => {
+            const candleElement = createCandleElement(candle);
+            candlesGrid.appendChild(candleElement);
+        });
+
+        // Exibir flores
+        flowersGrid.innerHTML = '';
+        activeTributes.flowers.forEach(flower => {
+            const flowerElement = createFlowerElement(flower);
+            flowersGrid.appendChild(flowerElement);
+        });
+    }
+
+    // Função para criar elemento de vela
+    function createCandleElement(candle) {
+        const div = document.createElement('div');
+        div.className = 'tribute-item candle-item';
+        
+        const timeRemaining = getTimeRemaining(candle);
+        
+        div.innerHTML = `
+            <div class="candle-flame">🕯️</div>
+            <div class="tribute-timer">${timeRemaining}</div>
+        `;
+        
+        return div;
+    }
+
+    // Função para criar elemento de flor
+    function createFlowerElement(flower) {
+        const div = document.createElement('div');
+        div.className = 'tribute-item flower-item';
+        
+        const timeRemaining = getTimeRemaining(flower);
+        
+        div.innerHTML = `
+            <div class="flower-bloom">🌹</div>
+            <div class="tribute-timer">${timeRemaining}</div>
+        `;
+        
+        return div;
+    }
+
+    // Função para calcular tempo restante
+    function getTimeRemaining(tribute) {
+        if (!tribute.expiresAt) {
+            return 'Permanente';
+        }
+
+        const now = new Date();
+        const expires = new Date(tribute.expiresAt);
+        const diff = expires - now;
+
+        if (diff <= 0) {
+            return 'Expirado';
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (hours > 24) {
+            const days = Math.floor(hours / 24);
+            return `${days}d ${hours % 24}h`;
+        } else if (hours > 0) {
+            return `${hours}h ${minutes}m`;
+        } else {
+            return `${minutes}m`;
+        }
+    }
+
+    // Função para atualizar contadores
+    function updateCounters() {
+        const candleCount = activeTributes.candles.length;
+        const flowerCount = activeTributes.flowers.length;
+
+        candlesCounter.textContent = candleCount === 0 ? 
+            'Nenhuma vela acesa no momento' : 
+            `${candleCount} vela${candleCount > 1 ? 's' : ''} acesa${candleCount > 1 ? 's' : ''}`;
+
+        flowersCounter.textContent = flowerCount === 0 ? 
+            'Nenhuma flor deixada no momento' : 
+            `${flowerCount} flor${flowerCount > 1 ? 'es' : ''} deixada${flowerCount > 1 ? 's' : ''}`;
+    }
+
+    // Função para adicionar comentário
+    function addComment(name, message) {
+        const comment = {
+            id: Date.now(),
+            name: name,
+            message: message,
+            date: new Date().toISOString()
+        };
+
+        comments.unshift(comment); // Adiciona no início da lista
+        localStorage.setItem('memorialComments', JSON.stringify(comments));
+        displayComments();
+        updateStats();
+    }
+
+    // Função para exibir comentários
+    function displayComments() {
+        commentsContainer.innerHTML = '';
+        
+        if (comments.length === 0) {
+            commentsContainer.innerHTML = '<p style="text-align: center; color: var(--gray-500); font-style: italic;">Nenhuma mensagem ainda. Seja o primeiro a deixar uma homenagem.</p>';
+            return;
+        }
+
+        comments.forEach(comment => {
+            const commentElement = createCommentElement(comment);
+            commentsContainer.appendChild(commentElement);
+        });
+    }
+
+    // Função para criar elemento de comentário
+    function createCommentElement(comment) {
+        const div = document.createElement('div');
+        div.className = 'comment-item';
+        
+        const date = new Date(comment.date);
+        const formattedDate = date.toLocaleDateString('pt-BR') + ' às ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        
+        div.innerHTML = `
+            <div class="comment-header">
+                <span class="comment-author">${comment.name}</span>
+                <span class="comment-date">${formattedDate}</span>
+            </div>
+            <div class="comment-message">${comment.message}</div>
+        `;
+        
+        return div;
+    }
+
+    // Função para atualizar estatísticas na sidebar
+    function updateStats() {
+        const candleCount = activeTributes.candles.length;
+        const flowerCount = activeTributes.flowers.length;
+        const messageCount = comments.length;
+
+        document.getElementById('candle-count').textContent = candleCount;
+        document.getElementById('flower-count').textContent = flowerCount;
+        document.getElementById('message-count').textContent = messageCount;
+    }
+
+    // Share memorial functionality
+    document.getElementById("share-memorial").addEventListener("click", function() {
+        const url = window.location.href;
+        if (navigator.share) {
+            navigator.share({
+                title: 'Memorial Público',
+                text: 'Visite este memorial em memória de {{ memorial.name if memorial else "nosso ente querido" }}',
+                url: url
+            });
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            navigator.clipboard.writeText(url).then(function() {
+                alert('Link copiado para a área de transferência!');
+            });
+        }
+    });
+
+    // Atualizar exibição a cada minuto
+    setInterval(function() {
+        updateTributesDisplay();
+        updateCounters();
+    }, 60000);
+
+    // Inicializar estatísticas
+    updateStats();
+});
+</script>
+
+<script src="{{ url_for('static', filename='js/biography_formatter.js') }}"></script>
+<script src="{{ url_for('static', filename='js/memorial_enhancements.js') }}"></script>
+{% endblock %}
+

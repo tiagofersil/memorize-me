@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Meu Memorial Online{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header - Estilo MyKeeper -->
+        <header class="header">
+            <div class="header-container">
+                <div class="logo">
+                    <a href="/" class="logo-link">
+                        <img src="{{ url_for('static', filename='images/memorial_logo.png') }}" alt="Memorial Online" class="logo-icon">
+                        <span class="logo-text">Memorize-me</span>
+                    </a>
+                </div>
+                
+                <!-- Barra de pesquisa central estilo MyKeeper -->
+                <div class="search-bar">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" placeholder="Encontrar um memorial ou pessoa">
+                </div>
+                
+                <nav class="nav">
+                    {% if session.user_id %}
+                        <a href="/memorial" class="nav-link">Meus Memoriais</a>
+                        <a href="/payments/create" class="nav-link">Pagamentos</a>
+                        <a href="/profile" class="nav-link">Perfil</a>
+                        <a href="/logout" class="nav-link nav-link-logout">Sair</a>
+                    {% else %}
+                        <a href="/login" class="nav-link">Entrar</a>
+                        <a href="/register" class="nav-link nav-link-primary">Cadastrar</a>
+                    {% endif %}
+                </nav>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                <i class="fas fa-info-circle"></i>
+                                <span>{{ message }}</span>
+                                <button class="flash-close" onclick="this.parentElement.remove()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>Memorial Online</h3>
+                        <p>Preservando memórias com carinho e tecnologia.</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Links Úteis</h4>
+                        <ul>
+                            <li><a href="/">Início</a></li>
+                            <li><a href="/memorial">Memoriais</a></li>
+                            <li><a href="/payments">Pagamentos</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Contato</h4>
+                        <p><i class="fas fa-envelope"></i> contato@memorialonline.com</p>
+                        <p><i class="fas fa-phone"></i> (11) 99999-9999</p>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 Memorial Online. Todos os direitos reservados.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Auto-hide flash messages after 5 seconds
+        setTimeout(() => {
+            document.querySelectorAll('.flash-message').forEach(msg => {
+                msg.style.opacity = '0';
+                setTimeout(() => msg.remove(), 300);
+            });
+        }, 5000);
+
+        // Funcionalidade da barra de pesquisa
+        document.querySelector('.search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.trim();
+                if (searchTerm) {
+                    // Implementar lógica de pesquisa aqui
+                    console.log('Pesquisando por:', searchTerm);
+                }
+            }
+        });
+    </script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+

@@ -1,0 +1,30 @@
+
+{% extends "loyout.html" %}
+
+{% block title %}Cadastro - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="main-card">
+    <div class="card-header">
+        <h1 class="card-title">Cadastro</h1>
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="form-group">
+                <label for="username" class="form-label">Usuário:</label>
+                <input type="text" id="username" name="username" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="password" class="form-label">Senha:</label>
+                <input type="password" id="password" name="password" class="form-input" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg">Cadastrar</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

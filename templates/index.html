@@ -1,0 +1,1047 @@
+{% extends "layout.html" %}
+
+{% block title %}Memorial Online - Página Inicial{% endblock %}
+
+{% block content %}
+<!-- Hero Section - Estilo MyKeeper -->
+<section class="hero-section">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            Um Memorial Online Melhor
+        </h1>
+        <p class="hero-subtitle">
+            Memorial Online é construído de forma única para ajudá-lo a fazer mais, tudo em um só lugar. 
+            Compartilhe memórias de seu ente querido, além de manter todos informados sobre detalhes do serviço memorial, atualizações e muito mais.
+        </p>
+        <div class="hero-cta">
+            {% if session.user_id %}
+                <a href="/memorial/create" class="btn btn-primary btn-lg">
+                    Criar Seu Memorial Gratuito
+                </a>
+                <a href="/memorial" class="btn btn-outline btn-lg">
+                    Meus Memoriais
+                </a>
+            {% else %}
+                <a href="/register" class="btn btn-primary btn-lg">
+                    Criar Seu Memorial Gratuito
+                </a>
+                <a href="/login" class="btn btn-outline btn-lg">
+                    Fazer Login
+                </a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Ilustração estilo MyKeeper -->
+    <div class="hero-illustration">
+        <div class="memorial-cards">
+            <div class="memorial-card card-1">
+                <div class="card-avatar">
+                    <img src="{{ url_for('static', filename='images/avatar_ana.png') }}" alt="Perfil">
+                </div>
+                <div class="card-content">
+                    <div class="card-lines">
+                        <div class="line line-title"></div>
+                        <div class="line line-subtitle"></div>
+                    </div>
+                </div>
+                <div class="card-likes">
+                    <i class="fas fa-heart"></i>
+                    <span>18</span>
+                </div>
+            </div>
+            
+            <div class="memorial-card card-2">
+                <div class="card-avatar">
+                    <img src="{{ url_for('static', filename='images/avatar_carlos.png') }}" alt="Perfil">
+                </div>
+                <div class="card-content">
+                    <div class="card-lines">
+                        <div class="line line-title"></div>
+                        <div class="line line-subtitle"></div>
+                    </div>
+                </div>
+                <div class="card-likes">
+                    <i class="fas fa-heart"></i>
+                    <span>9</span>
+                </div>
+            </div>
+            
+            <div class="memorial-card card-3">
+                <div class="card-avatar">
+                    <img src="{{ url_for('static', filename='images/avatar_fernanda.png') }}" alt="Perfil">
+                </div>
+                <div class="card-content">
+                    <div class="card-lines">
+                        <div class="line line-title"></div>
+                        <div class="line line-subtitle"></div>
+                    </div>
+                </div>
+                <div class="card-likes">
+                    <i class="fas fa-heart"></i>
+                    <span>2</span>
+                </div>
+            </div>
+            
+            <div class="memorial-card card-4">
+                <div class="card-avatar">
+                    <div class="avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="card-lines">
+                        <div class="line line-title"></div>
+                        <div class="line line-subtitle"></div>
+                    </div>
+                </div>
+                <div class="card-likes">
+                    <i class="fas fa-heart"></i>
+                    <span>22</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seção de Memoriais Recentes (se usuário logado) -->
+{% if session.user_id and recent_memorials %}
+<section class="recent-memorials-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Seus Memoriais Recentes</h2>
+            <p class="section-subtitle">Continue gerenciando suas memórias preciosas</p>
+        </div>
+        
+        <div class="memorials-grid">
+            {% for memorial in recent_memorials %}
+            <div class="memorial-card-simple">
+                <div class="memorial-header">
+                    <div class="memorial-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3 class="memorial-name">{{ memorial.name }}</h3>
+                </div>
+                <p class="memorial-date">Criado em: {{ memorial.created_at.strftime('%d/%m/%Y') if memorial.created_at else 'Data não disponível' }}</p>
+                <div class="memorial-actions">
+                    <a href="/memorial/view/{{ memorial.id }}" class="btn btn-sm btn-primary">Ver Memorial</a>
+                    <a href="/memorial/edit/{{ memorial.id }}" class="btn btn-sm btn-outline">Editar</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="section-cta">
+            <a href="/memorial" class="btn btn-outline">Ver Todos os Memoriais</a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Seções de recursos - Estilo MyKeeper -->
+<section class="features-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Tudo que você precisa para preservar memórias</h2>
+            <p class="section-subtitle">Ferramentas completas para criar memoriais únicos e especiais</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Crie uma página Memorial</h3>
+                    <p class="feature-description">
+                        Honre alguém que faleceu, ou crie um Legado Vivo para começar a salvar memórias e informações importantes para você e seus entes queridos agora.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Adicione Histórias</h3>
+                    <p class="feature-description">
+                        Cada foto e vídeo tem uma história para contar. Destaque-os e outros momentos importantes na vida de seu ente querido com modelos especiais de História.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-palette"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Personalize tudo</h3>
+                    <p class="feature-description">
+                        Inclua o máximo ou o mínimo de informações que desejar, mude a cor do tema e a imagem do banner, adicione fotos e vídeos, e muito mais.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Faça Upload de Fotos e Vídeos</h3>
+                    <p class="feature-description">
+                        Honre alguém que faleceu, ou crie um Legado Vivo para começar a salvar memórias e informações importantes para você e seus entes queridos agora.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-images"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Crie Álbuns</h3>
+                    <p class="feature-description">
+                        Faça upload de até 100 de suas fotos e clipes favoritos como Lembranças do seu telefone ou computador.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-magic"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Transforme em Histórias</h3>
+                    <p class="feature-description">
+                        Desde a medalha da maratona até o restaurante favorito e tudo mais, escolha uma História (ou algumas!) para ajudar a destacar o que tornou seu ente querido único.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Colete Tributos</h3>
+                    <p class="feature-description">
+                        Amigos, família, colegas de trabalho e outros membros da comunidade de seu ente querido podem compartilhar histórias, deixar condolências e muito mais — com zero limites de armazenamento.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-question-circle"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Responda uma Pergunta</h3>
+                    <p class="feature-description">
+                        Oriente os visitantes a contar histórias queridas e compartilhar memórias com perguntas simples e geradas na página de seu ente querido.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Compartilhe fotos e Vídeos</h3>
+                    <p class="feature-description">
+                        Os visitantes podem fazer upload de até dez fotos e vídeos por vez para compartilhar na página de seu ente querido.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Defina sua Privacidade</h3>
+                    <p class="feature-description">
+                        Mostre seu Memorial para o mundo, proteja-o com senha, mantenha-o apenas entre a família e muito mais com apenas um clique.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Configurações de Moderação</h3>
+                    <p class="feature-description">
+                        Permita que o conteúdo enviado pelo usuário apareça em sua página imediatamente, escolha aprovar cada nova adição e muito mais.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="feature-block">
+                <div class="feature-visual">
+                    <div class="feature-icon">
+                        <i class="fas fa-eye-slash"></i>
+                    </div>
+                </div>
+                <div class="feature-content">
+                    <h3 class="feature-title">Ocultar dos Mecanismos de Busca</h3>
+                    <p class="feature-description">
+                        Torne sua página incapaz de ser descoberta em sites como Google e Bing para ainda mais privacidade.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Seção de Planos -->
+<section class="plans-preview-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Escolha o plano ideal para você</h2>
+            <p class="section-subtitle">Planos flexíveis para todas as necessidades</p>
+        </div>
+        
+        <div class="plans-preview-grid">
+            <div class="plan-preview-card">
+                <div class="plan-icon">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <h3 class="plan-name">Básico</h3>
+                <div class="plan-price">
+                    <span class="currency">R$</span>
+                    <span class="amount">29</span>
+                    <span class="period">/mês</span>
+                </div>
+                <p class="plan-description">Ideal para memoriais simples</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 1 Memorial</li>
+                    <li><i class="fas fa-check"></i> Até 20 fotos</li>
+                    <li><i class="fas fa-check"></i> QR Code personalizado</li>
+                </ul>
+            </div>
+            
+            <div class="plan-preview-card featured">
+                <div class="plan-badge">Mais Popular</div>
+                <div class="plan-icon">
+                    <i class="fas fa-crown"></i>
+                </div>
+                <h3 class="plan-name">Premium</h3>
+                <div class="plan-price">
+                    <span class="currency">R$</span>
+                    <span class="amount">59</span>
+                    <span class="period">/mês</span>
+                </div>
+                <p class="plan-description">Perfeito para famílias</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> 5 Memoriais</li>
+                    <li><i class="fas fa-check"></i> Fotos ilimitadas</li>
+                    <li><i class="fas fa-check"></i> Vídeos inclusos</li>
+                </ul>
+            </div>
+            
+            <div class="plan-preview-card">
+                <div class="plan-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3 class="plan-name">Família</h3>
+                <div class="plan-price">
+                    <span class="currency">R$</span>
+                    <span class="amount">99</span>
+                    <span class="period">/mês</span>
+                </div>
+                <p class="plan-description">Solução completa</p>
+                <ul class="plan-features">
+                    <li><i class="fas fa-check"></i> Memoriais ilimitados</li>
+                    <li><i class="fas fa-check"></i> Tudo do Premium</li>
+                    <li><i class="fas fa-check"></i> Suporte 24/7</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section-cta">
+            <a href="/payments" class="btn btn-primary btn-lg">Ver Todos os Planos</a>
+        </div>
+    </div>
+</section>
+
+<!-- Seção CTA Final -->
+<section class="cta-section">
+    <div class="cta-content">
+        <h2 class="cta-title">Pronto para começar?</h2>
+        <p class="cta-subtitle">
+            Crie seu primeiro memorial em poucos minutos e preserve memórias para sempre
+        </p>
+        <div class="cta-actions">
+            {% if not session.user_id %}
+                <a href="/register" class="btn btn-primary btn-lg">
+                    Criar Seu Memorial Gratuito
+                </a>
+                <a href="/login" class="btn btn-outline btn-lg">
+                    Já tenho conta
+                </a>
+            {% else %}
+                <a href="/memorial/create" class="btn btn-primary btn-lg">
+                    Criar Novo Memorial
+                </a>
+                <a href="/memorial" class="btn btn-outline btn-lg">
+                    Meus Memoriais
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<style>
+/* Container global */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+/* Hero Section - Estilo MyKeeper */
+.hero-section {
+    background: linear-gradient(135deg, #e6fffa 0%, #f7fafc 100%);
+    padding: var(--spacing-20) 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-16);
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--spacing-6);
+    padding-right: var(--spacing-6);
+}
+
+.hero-content {
+    max-width: 500px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    line-height: 1.2;
+}
+
+.hero-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-8);
+    line-height: 1.6;
+}
+
+.hero-cta {
+    display: flex;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.hero-cta .btn {
+    font-size: var(--font-size-base);
+    padding: var(--spacing-4) var(--spacing-8);
+}
+
+/* Ilustração dos cartões memoriais */
+.hero-illustration {
+    position: relative;
+    height: 500px;
+}
+
+.memorial-cards {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.memorial-card {
+    position: absolute;
+    background: white;
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-4);
+    width: 280px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    transition: all 0.3s ease;
+}
+
+.memorial-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+}
+
+.card-1 {
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #e6fffa, white);
+}
+
+.card-2 {
+    top: 160px;
+    right: 40px;
+    background: linear-gradient(135deg, white, #e6fffa);
+}
+
+.card-3 {
+    top: 300px;
+    left: 0;
+    background: linear-gradient(135deg, #e6fffa, white);
+}
+
+.card-4 {
+    top: 80px;
+    right: 120px;
+    background: linear-gradient(135deg, white, #e6fffa);
+}
+
+.card-avatar {
+    flex-shrink: 0;
+}
+
+.card-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--turquoise-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-lines {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.line {
+    height: 8px;
+    background: var(--gray-200);
+    border-radius: 4px;
+}
+
+.line-title {
+    width: 80%;
+}
+
+.line-subtitle {
+    width: 60%;
+}
+
+.card-likes {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+    color: var(--turquoise-500);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+/* Seção de Memoriais Recentes */
+.recent-memorials-section {
+    padding: var(--spacing-16) 0;
+    background: var(--gray-50);
+}
+
+.memorials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+}
+
+.memorial-card-simple {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    transition: all 0.3s ease;
+}
+
+.memorial-card-simple:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.memorial-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-3);
+}
+
+.memorial-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--turquoise-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+}
+
+.memorial-name {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0;
+}
+
+.memorial-date {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-4);
+}
+
+.memorial-actions {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+/* Headers de seção */
+.section-header {
+    text-align: center;
+    margin-bottom: var(--spacing-12);
+}
+
+.section-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.section-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.section-cta {
+    text-align: center;
+    margin-top: var(--spacing-8);
+}
+
+/* Seções de recursos */
+.features-section {
+    padding: var(--spacing-20) 0;
+    background: white;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-12);
+}
+
+.feature-block {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-6);
+}
+
+.feature-content {
+    flex: 1;
+}
+
+.feature-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.feature-description {
+    color: var(--gray-600);
+    line-height: 1.6;
+}
+
+.feature-visual {
+    flex-shrink: 0;
+}
+
+.feature-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--turquoise-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+    font-size: var(--font-size-xl);
+}
+
+/* Seção de Preview dos Planos */
+.plans-preview-section {
+    padding: var(--spacing-20) 0;
+    background: var(--gray-50);
+}
+
+.plans-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+}
+
+.plan-preview-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-8);
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--gray-200);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.plan-preview-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.plan-preview-card.featured {
+    border-color: var(--turquoise-400);
+    transform: scale(1.05);
+}
+
+.plan-preview-card.featured:hover {
+    transform: scale(1.05) translateY(-4px);
+}
+
+.plan-badge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--turquoise-500);
+    color: white;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.plan-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--turquoise-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+    font-size: var(--font-size-xl);
+    margin: 0 auto var(--spacing-4);
+}
+
+.plan-name {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.plan-price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--spacing-1);
+    margin-bottom: var(--spacing-3);
+}
+
+.currency {
+    font-size: var(--font-size-base);
+    color: var(--gray-600);
+}
+
+.amount {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--turquoise-600);
+}
+
+.period {
+    font-size: var(--font-size-base);
+    color: var(--gray-600);
+}
+
+.plan-description {
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-4);
+}
+
+.plan-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    color: var(--gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.plan-features i {
+    color: var(--success-color);
+    font-size: var(--font-size-xs);
+}
+
+/* CTA Section */
+.cta-section {
+    background: linear-gradient(135deg, var(--turquoise-50), var(--gray-50));
+    padding: var(--spacing-20) 0;
+    text-align: center;
+}
+
+.cta-content {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-6);
+}
+
+.cta-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.cta-subtitle {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-8);
+    line-height: 1.6;
+}
+
+.cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+/* Buttons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--turquoise-600);
+    border: 2px solid var(--turquoise-400);
+}
+
+.btn-outline:hover {
+    background: var(--turquoise-50);
+    border-color: var(--turquoise-500);
+    transform: translateY(-2px);
+}
+
+.btn-lg {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-base);
+}
+
+.btn-sm {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-xs);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .hero-section {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-12);
+        text-align: center;
+        padding: var(--spacing-16) var(--spacing-6);
+    }
+    
+    .hero-title {
+        font-size: var(--font-size-3xl);
+    }
+    
+    .hero-cta {
+        justify-content: center;
+    }
+    
+    .hero-illustration {
+        height: 300px;
+    }
+    
+    .memorial-card {
+        width: 240px;
+        height: 100px;
+        padding: var(--spacing-3);
+    }
+    
+    .card-avatar img,
+    .avatar-placeholder {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-8);
+    }
+    
+    .feature-block {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-4);
+    }
+    
+    .plans-preview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .plan-preview-card.featured {
+        transform: none;
+    }
+    
+    .plan-preview-card.featured:hover {
+        transform: translateY(-4px);
+    }
+    
+    .memorials-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .memorial-actions {
+        flex-direction: column;
+    }
+    
+    .cta-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        padding: var(--spacing-12) var(--spacing-4);
+    }
+    
+    .features-section,
+    .plans-preview-section,
+    .recent-memorials-section {
+        padding: var(--spacing-12) 0;
+    }
+    
+    .cta-section {
+        padding: var(--spacing-12) 0;
+    }
+    
+    .memorial-cards {
+        transform: scale(0.8);
+    }
+    
+    .container {
+        padding: 0 var(--spacing-4);
+    }
+}
+
+/* Animações */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.feature-block,
+.plan-preview-card,
+.memorial-card-simple {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.feature-block:nth-child(2),
+.plan-preview-card:nth-child(2) {
+    animation-delay: 0.1s;
+}
+
+.feature-block:nth-child(3),
+.plan-preview-card:nth-child(3) {
+    animation-delay: 0.2s;
+}
+</style>
+{% endblock %}
+

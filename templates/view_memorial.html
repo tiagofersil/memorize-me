@@ -1,0 +1,434 @@
+{% extends "layout.html" %}
+
+{% block title %}Memorial: {{ memorial.name }} - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="memorial-container facebook-style">
+    <!-- Cover Photo and Profile Picture Section -->
+    <div class="profile-header-section">
+        <div class="cover-photo-container">
+            <img src="{{ url_for('static', filename='images/default_cover.jpg') }}" alt="Foto de Capa" class="cover-photo">
+            <div class="profile-picture-container">
+                {% if memorial.profile_photo_path %}
+                    <img src="{{ url_for('serve_media', filename=memorial.profile_photo_path) }}" alt="Foto de Perfil" class="profile-picture">
+                {% else %}
+                    <div class="profile-picture-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="profile-info-bar">
+            <h1 class="memorial-name">{{ memorial.name }}</h1>
+            {% if memorial.birth_date or memorial.death_date %}
+            <div class="memorial-dates">
+                {% if memorial.birth_date %}
+                    <span class="birth-date">{{ memorial.birth_date }}</span>
+                {% endif %}
+                {% if memorial.birth_date and memorial.death_date %}
+                    <span class="date-separator">-</span>
+                {% endif %}
+                {% if memorial.death_date %}
+                    <span class="death-date">{{ memorial.death_date }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
+            <p class="memorial-subtitle">Em memória de uma vida especial</p>
+        </div>
+    </div>
+
+    <!-- Main Content Area (Timeline and Sidebar) -->
+    <div class="memorial-main-content">
+        <div class="timeline-section">
+            <!-- Biography Card -->
+            {% if memorial.text_content or memorial.biography %}
+            <div class="card timeline-card">
+                <div class="card-body">
+                    <h2 class="section-title mb-4"><i class="fas fa-book-open"></i> História de Vida</h2>
+                    <p>{{ memorial.text_content or memorial.biography }}</p>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Family Message Card -->
+            {% if memorial.family_message %}
+            <div class="card timeline-card">
+                <div class="card-body">
+                    <h2 class="section-title mb-4"><i class="fas fa-heart"></i> Mensagem da Família</h2>
+                    <blockquote>
+                        <p>{{ memorial.family_message }}</p>
+                    </blockquote>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Photo Gallery Card -->
+            {% if photos %}
+            <div class="card timeline-card">
+                <div class="card-body">
+                    <h2 class="section-title mb-4"><i class="fas fa-images"></i> Galeria de Memórias1</h2>
+                    <div class="gallery-grid">
+                        {% for photo in photos %}
+                            {% set filename = photo.photo_path.split("/")[-1] %}
+                            {% set extension = filename.split(".")[-1].lower() %}
+                            <div class="gallery-item">
+                                {% if extension in ["mp4", "avi", "mov"] %}
+                                    <video controls class="gallery-video">
+                                        <source src="{{ url_for('serve_media', filename=photo.photo_path) }}" type="video/{{ extension }}">
+                                        Seu navegador não suporta o elemento de vídeo.
+                                    </video>
+                                {% else %}
+                                    <img src="{{ url_for('serve_media', filename=photo.photo_path) }}" alt="Memória de {{ memorial.name }}" class="gallery-image">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+{% include "_shared_photos.html" with context %}
+
+            <!-- QR Code Card -->
+            <div class="card timeline-card">
+                <div class="card-body">
+                    <h2 class="section-title mb-4"><i class="fas fa-qrcode"></i> Compartilhar Memorial</h2>
+                    <div class="qr-content">
+                        <div class="qr-code-container">
+                            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code do Memorial" class="qr-code-image">
+                        </div>
+                        <div class="qr-info">
+                            <p class="qr-description">Escaneie este QR Code para acessar o memorial facilmente</p>
+                            <p class="memorial-date">Memorial criado em {{ memorial.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Section -->
+        <div class="sidebar-section">
+            <!-- Memorial Actions Card -->
+            <div class="card sidebar-card">
+                <div class="card-body">
+                    <h3 class="section-title mb-4"><i class="fas fa-cogs"></i> Ações do Memorial</h3>
+                    <div class="actions-container">
+                        <a href="{{ url_for('memorial.edit_memorial', memorial_id=memorial.id) }}" class="btn btn-primary btn-block mb-3">
+                            <i class="fas fa-edit"></i> Editar Memorial
+                        </a>
+                        <a href="{{ url_for('memorial.generate_memorial', memorial_id=memorial.id) }}" class="btn btn-secondary btn-block" target="_blank">
+                            <i class="fas fa-external-link-alt"></i> Ver Memorial Público
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Plan Credits Card -->
+            <div class="card sidebar-card">
+                <div class="card-body">
+                    <h3 class="section-title mb-4"><i class="fas fa-star"></i> Seus Créditos de Planos</h3>
+                    {% if user_plans_credits %}
+                        {% for plan_type, credits in user_plans_credits.items() %}
+                            <div class="plan-credit-item">
+                                <span>{{ plan_type|replace('_', ' ')|title }}:</span>
+                                <span class="credits-count">{{ credits }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center text-gray-600">Nenhum plano ativo.</p>
+                    {% endif %}
+                    <a href="{{ url_for('payments.show_payment_plans') }}" class="btn btn-primary btn-block mt-4">
+                        <i class="fas fa-credit-card"></i> Adquirir Mais Memórias
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Adicione estilos específicos para esta página aqui */
+.memorial-container.facebook-style {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+}
+
+.profile-header-section {
+    background: var(--white);
+    border-radius: var(--border-radius-xl);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: var(--spacing-8);
+    overflow: hidden;
+}
+
+.cover-photo-container {
+    position: relative;
+    width: 100%;
+    height: 300px; /* Ajuste conforme necessário */
+    background-color: var(--gray-200);
+}
+
+.cover-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-picture-container {
+    position: absolute;
+    bottom: -50px; /* Ajuste para sobrepor a foto de capa */
+    left: var(--spacing-8);
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: var(--white);
+    padding: 5px;
+    box-shadow: var(--shadow-md);
+}
+
+.profile-picture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-picture-placeholder {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--gray-400);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--white);
+}
+
+.profile-info-bar {
+    padding: var(--spacing-8) var(--spacing-8) var(--spacing-4) 200px; /* Ajuste para acomodar a foto de perfil */
+    text-align: left;
+    border-top: 1px solid var(--gray-200);
+}
+
+.profile-info-bar .memorial-name {
+    font-size: var(--font-size-4xl);
+    margin-bottom: var(--spacing-2);
+}
+
+.profile-info-bar .memorial-dates {
+    font-size: var(--font-size-lg);
+    color: var(--gray-600);
+}
+
+.profile-info-bar .memorial-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--gray-500);
+}
+
+.memorial-main-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Timeline 2/3, Sidebar 1/3 */
+    gap: var(--spacing-8);
+}
+
+.timeline-section .card {
+    margin-bottom: var(--spacing-8);
+}
+
+.sidebar-section .card {
+    margin-bottom: var(--spacing-8);
+}
+
+.section-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.section-title i {
+    color: var(--primary-color);
+}
+
+.timeline-card .card-body p {
+    line-height: 1.7;
+    color: var(--gray-700);
+}
+
+.timeline-card .card-body blockquote {
+    background: var(--gray-50);
+    border-left: 4px solid var(--accent-color);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius);
+    margin: 0;
+    font-style: italic;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--spacing-4);
+}
+
+.gallery-item {
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.gallery-image, .gallery-video {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    display: block;
+}
+
+.qr-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-6);
+}
+
+.qr-code-container {
+    flex-shrink: 0;
+}
+
+.qr-code-image {
+    width: 100px;
+    height: 100px;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-2);
+}
+
+.qr-info {
+    flex-grow: 1;
+}
+
+.plan-credit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) 0;
+    border-bottom: 1px dashed var(--gray-200);
+}
+
+.plan-credit-item:last-child {
+    border-bottom: none;
+}
+
+.credits-count {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Seção de Anexos */
+.attachments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+    transition: all 0.2s ease;
+}
+
+.attachment-item:hover {
+    background: var(--gray-100);
+    border-color: var(--primary-color);
+}
+
+.attachment-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.attachment-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.attachment-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    word-break: break-word;
+}
+
+.attachment-meta {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.attachment-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-sm {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+
+.btn-outline-primary {
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .profile-picture-container {
+        position: static;
+        margin: -75px auto 0;
+        transform: translateY(0);
+    }
+
+    .profile-info-bar {
+        padding: var(--spacing-4);
+        text-align: center;
+    }
+
+    .memorial-main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .qr-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+{% endblock %}
+

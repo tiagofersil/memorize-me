@@ -1,0 +1,501 @@
+/* Melhorias para Timeline e Seções Adicionais */
+
+/* ===== TIMELINE INTERATIVA ===== */
+.timeline-section {
+    position: relative;
+}
+
+.timeline-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.timeline-list::before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--turquoise-400), var(--turquoise-600));
+}
+
+.timeline-list li {
+    position: relative;
+    padding: var(--spacing-4) 0 var(--spacing-4) var(--spacing-16);
+    margin-bottom: var(--spacing-6);
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.timeline-list li:hover {
+    transform: translateX(10px);
+    box-shadow: var(--shadow-md);
+}
+
+.timeline-list li::before {
+    content: '';
+    position: absolute;
+    left: -45px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    background: var(--turquoise-500);
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 4px var(--turquoise-200);
+    z-index: 1;
+}
+
+.timeline-list li:nth-child(even)::before {
+    background: var(--turquoise-600);
+}
+
+/* ===== SEÇÃO DE LEGADO ===== */
+.legacy-section {
+    background: linear-gradient(135deg, var(--turquoise-50), var(--turquoise-100));
+    border-left: 4px solid var(--turquoise-500);
+}
+
+.legacy-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-5);
+}
+
+.legacy-item {
+    background: white;
+    padding: var(--spacing-5);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    border-top: 4px solid var(--turquoise-400);
+}
+
+.legacy-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.legacy-item h4 {
+    color: var(--turquoise-700);
+    margin-bottom: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.legacy-item i {
+    color: var(--turquoise-500);
+    font-size: var(--font-size-lg);
+}
+
+/* ===== SEÇÃO DE MEMÓRIAS COMPARTILHADAS ===== */
+.shared-memories-section {
+    background: var(--gray-50);
+}
+
+.memory-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-5);
+    margin-top: var(--spacing-5);
+}
+
+.memory-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-5);
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.memory-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--turquoise-400), var(--turquoise-600));
+}
+
+.memory-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.memory-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+}
+
+.memory-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--turquoise-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--turquoise-600);
+    font-weight: 600;
+    font-size: var(--font-size-lg);
+}
+
+.memory-author {
+    flex: 1;
+}
+
+.memory-author h5 {
+    margin: 0;
+    color: var(--gray-800);
+    font-weight: 600;
+}
+
+.memory-date {
+    font-size: var(--font-size-sm);
+    color: var(--gray-500);
+}
+
+.memory-content {
+    color: var(--gray-700);
+    line-height: 1.6;
+    font-style: italic;
+}
+
+.memory-content::before,
+.memory-content::after {
+    content: '"';
+    color: var(--turquoise-400);
+    font-size: var(--font-size-2xl);
+    font-family: serif;
+}
+
+/* ===== MAPA INTERATIVO ===== */
+.locations-section {
+    background: white;
+}
+
+.locations-grid {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--spacing-6);
+    margin-top: var(--spacing-5);
+}
+
+.location-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.location-item {
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-3);
+    background: var(--gray-50);
+    border-left: 4px solid var(--turquoise-400);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.location-item:hover {
+    background: var(--turquoise-50);
+    transform: translateX(5px);
+}
+
+.location-item.active {
+    background: var(--turquoise-100);
+    border-left-color: var(--turquoise-600);
+}
+
+.location-name {
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-1);
+}
+
+.location-description {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.location-map {
+    background: var(--gray-200);
+    border-radius: var(--border-radius-lg);
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-500);
+}
+
+@media (max-width: 1024px) {
+    .locations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .location-map {
+        height: 300px;
+    }
+}
+
+/* ===== PLAYER DE MÚSICA INTEGRADO ===== */
+.music-player {
+    background: linear-gradient(135deg, var(--turquoise-600), var(--turquoise-700));
+    color: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-5);
+    margin-top: var(--spacing-5);
+    box-shadow: var(--shadow-lg);
+}
+
+.music-player-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-4);
+}
+
+.music-player-header i {
+    font-size: var(--font-size-xl);
+}
+
+.music-player-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0;
+}
+
+.music-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+
+.music-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-lg);
+}
+
+.music-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.music-btn.play-btn {
+    background: white;
+    color: var(--turquoise-600);
+    width: 60px;
+    height: 60px;
+    font-size: var(--font-size-xl);
+}
+
+.music-progress {
+    flex: 1;
+    margin: 0 var(--spacing-4);
+}
+
+.music-progress-bar {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.music-progress-fill {
+    height: 100%;
+    background: white;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.music-time {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+/* ===== CONTADOR DE VISITAS MELHORADO ===== */
+.visit-counter {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-4);
+    text-align: center;
+    box-shadow: var(--shadow);
+    margin-top: var(--spacing-5);
+}
+
+.visit-number {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--turquoise-600);
+    display: block;
+    margin-bottom: var(--spacing-2);
+}
+
+.visit-label {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* ===== SEÇÃO DE RECEITAS ===== */
+.recipes-section {
+    background: var(--gray-50);
+}
+
+.recipes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-5);
+    margin-top: var(--spacing-5);
+}
+
+.recipe-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: all 0.3s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.recipe-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background: var(--gray-200);
+}
+
+.recipe-content {
+    padding: var(--spacing-5);
+}
+
+.recipe-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.recipe-description {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+    margin-bottom: var(--spacing-4);
+}
+
+.recipe-meta {
+    display: flex;
+    gap: var(--spacing-4);
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+}
+
+.recipe-meta span {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-1);
+}
+
+/* ===== RESPONSIVIDADE GERAL ===== */
+@media (max-width: 768px) {
+    .timeline-list li {
+        padding-left: var(--spacing-8);
+    }
+    
+    .timeline-list::before {
+        left: 15px;
+    }
+    
+    .timeline-list li::before {
+        left: -30px;
+        width: 15px;
+        height: 15px;
+    }
+    
+    .legacy-grid,
+    .memory-cards,
+    .recipes-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .music-controls {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .music-progress {
+        order: 3;
+        width: 100%;
+        margin: var(--spacing-3) 0 0 0;
+    }
+}
+
+/* ===== ANIMAÇÕES ADICIONAIS ===== */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.timeline-list li:nth-child(odd) {
+    animation: fadeInLeft 0.6s ease-out;
+}
+
+.timeline-list li:nth-child(even) {
+    animation: fadeInRight 0.6s ease-out;
+}
+
+.memory-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.memory-card:nth-child(2) { animation-delay: 0.1s; }
+.memory-card:nth-child(3) { animation-delay: 0.2s; }
+.memory-card:nth-child(4) { animation-delay: 0.3s; }
+

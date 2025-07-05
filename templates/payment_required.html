@@ -1,0 +1,174 @@
+{% extends "loyout.html" %}
+
+{% block title %}Escolha um Plano - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="payment-required-container">
+    <div class="payment-required-card">
+        <div class="payment-icon">
+            <i class="fas fa-lock"></i>
+        </div>
+        
+        <h1 class="payment-title">Plano Necessário</h1>
+        <p class="payment-subtitle">
+            Para criar um memorial, você precisa escolher um de nossos planos. 
+            Selecione a opção que melhor atende às suas necessidades.
+        </p>
+
+        <div class="benefits-list">
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Memorial personalizado e único</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>QR Code físico para o túmulo</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Galeria de fotos e memórias</span>
+            </div>
+            <div class="benefit-item">
+                <i class="fas fa-check-circle"></i>
+                <span>Acesso permanente online</span>
+            </div>
+        </div>
+
+        <div class="payment-actions">
+            <a href="/payments" class="btn btn-primary btn-lg">
+                <i class="fas fa-credit-card"></i>
+                Ver Planos e Preços
+            </a>
+            <a href="/" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+                Voltar ao Início
+            </a>
+        </div>
+
+        <div class="security-note">
+            <i class="fas fa-shield-alt"></i>
+            <span>Pagamento 100% seguro via Mercado Pago</span>
+        </div>
+    </div>
+</div>
+
+<style>
+.payment-required-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: var(--spacing-8);
+}
+
+.payment-required-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    border: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-lg);
+    padding: var(--spacing-12);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.payment-icon {
+    width: 80px;
+    height: 80px;
+    background: var(--gray-100);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-6);
+    font-size: var(--font-size-2xl);
+    color: var(--gray-600);
+}
+
+.payment-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.payment-subtitle {
+    font-size: var(--font-size-base);
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: var(--spacing-8);
+}
+
+.benefits-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+    margin-bottom: var(--spacing-8);
+    text-align: left;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    color: var(--gray-700);
+    font-size: var(--font-size-sm);
+}
+
+.benefit-item i {
+    color: var(--success-color);
+    font-size: var(--font-size-base);
+}
+
+.payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-8);
+}
+
+.btn-lg {
+    padding: var(--spacing-4) var(--spacing-8);
+    font-size: var(--font-size-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+}
+
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-3);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+.security-note i {
+    color: var(--success-color);
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .payment-required-card {
+        padding: var(--spacing-8);
+    }
+    
+    .payment-actions {
+        gap: var(--spacing-3);
+    }
+    
+    .btn-lg {
+        padding: var(--spacing-3) var(--spacing-6);
+        font-size: var(--font-size-sm);
+    }
+}
+</style>
+
+{% endblock %}
+

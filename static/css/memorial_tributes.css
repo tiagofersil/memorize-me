@@ -1,0 +1,372 @@
+/* Estilos para Velas e Flores Virtuais do Memorial */
+
+.memorial-tributes {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.tribute-actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.tribute-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.candle-btn {
+    background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+}
+
+.candle-btn:hover {
+    background: linear-gradient(135deg, #ff5722 0%, #ff9800 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+}
+
+.flower-btn {
+    background: linear-gradient(135deg, #e91e63 0%, #ad1457 100%);
+}
+
+.flower-btn:hover {
+    background: linear-gradient(135deg, #c2185b 0%, #880e4f 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4);
+}
+
+.tributes-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    min-height: 100px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    border: 2px dashed #dee2e6;
+}
+
+.tribute-item {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.tribute-item:hover {
+    transform: scale(1.1);
+}
+
+.candle-item {
+    width: 60px;
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.candle-flame {
+    width: 20px;
+    height: 30px;
+    background: radial-gradient(ellipse at center, #ffeb3b 0%, #ff9800 50%, #ff5722 100%);
+    border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+    animation: flicker 2s ease-in-out infinite alternate;
+    margin-bottom: 5px;
+    box-shadow: 0 0 20px rgba(255, 152, 0, 0.6);
+}
+
+@keyframes flicker {
+    0% {
+        transform: rotate(-1deg) scale(1);
+        opacity: 0.9;
+    }
+    25% {
+        transform: rotate(1deg) scale(1.05);
+        opacity: 1;
+    }
+    50% {
+        transform: rotate(-0.5deg) scale(0.98);
+        opacity: 0.95;
+    }
+    75% {
+        transform: rotate(0.5deg) scale(1.02);
+        opacity: 1;
+    }
+    100% {
+        transform: rotate(-1deg) scale(1);
+        opacity: 0.9;
+    }
+}
+
+.candle-base {
+    width: 40px;
+    height: 50px;
+    background: linear-gradient(180deg, #fff8e1 0%, #ffecb3 100%);
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.candle-base::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 2px;
+    height: 8px;
+    background: #333;
+    border-radius: 1px;
+}
+
+.flower-item {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.flower-icon {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: bloom 3s ease-in-out infinite;
+}
+
+.rose-icon {
+    background: radial-gradient(circle, #ffcdd2 0%, #e57373 50%, #d32f2f 100%);
+    box-shadow: 0 0 15px rgba(211, 47, 47, 0.4);
+}
+
+.lotus-icon {
+    background: radial-gradient(circle, #f8bbd9 0%, #e1bee7 50%, #ba68c8 100%);
+    box-shadow: 0 0 15px rgba(186, 104, 200, 0.4);
+}
+
+@keyframes bloom {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.tribute-tooltip {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.tribute-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.tribute-item:hover .tribute-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tribute-timer {
+    font-size: 10px;
+    color: #666;
+    margin-top: 2px;
+    text-align: center;
+}
+
+.duration-selector {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    z-index: 2000;
+    min-width: 300px;
+}
+
+.duration-selector.active {
+    display: block;
+}
+
+.duration-selector h3 {
+    margin: 0 0 20px 0;
+    text-align: center;
+    color: #333;
+}
+
+.duration-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.duration-option {
+    padding: 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+}
+
+.duration-option:hover {
+    border-color: #007bff;
+    background: #e3f2fd;
+}
+
+.duration-option.selected {
+    border-color: #007bff;
+    background: #007bff;
+    color: white;
+}
+
+.message-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    resize: vertical;
+    min-height: 60px;
+}
+
+.selector-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+.selector-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.confirm-btn {
+    background: #28a745;
+    color: white;
+}
+
+.confirm-btn:hover {
+    background: #218838;
+}
+
+.cancel-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background: #5a6268;
+}
+
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1999;
+}
+
+.modal-overlay.active {
+    display: block;
+}
+
+.empty-tributes {
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+    padding: 40px 20px;
+}
+
+.tribute-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #dc3545;
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .tribute-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .tribute-btn {
+        width: 200px;
+        justify-content: center;
+    }
+    
+    .duration-selector {
+        width: 90%;
+        max-width: 350px;
+        padding: 20px;
+    }
+    
+    .duration-options {
+        grid-template-columns: 1fr;
+    }
+}
+
