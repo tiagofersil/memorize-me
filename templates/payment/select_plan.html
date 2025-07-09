@@ -1,0 +1,284 @@
+{% extends 'layout.html' %}
+
+{% block title %}Selecionar Plano{% endblock %}
+
+{% block extra_head %}
+<style>
+.plans-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.plans-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.plans-header h1 {
+    color: var(--gray-800);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.plans-header p {
+    color: var(--gray-600);
+    font-size: 1.125rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.plans-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.plan-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    border: 2px solid var(--gray-100);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.plan-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    border-color: var(--turquoise-300);
+}
+
+.plan-card.featured {
+    border-color: var(--turquoise-400);
+    transform: scale(1.05);
+}
+
+.plan-card.featured::before {
+    content: 'Mais Popular';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--turquoise-400);
+    color: white;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.plan-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.plan-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: 0.5rem;
+}
+
+.plan-price {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--turquoise-500);
+    margin-bottom: 0.5rem;
+}
+
+.plan-price .currency {
+    font-size: 1.5rem;
+    vertical-align: top;
+}
+
+.plan-description {
+    color: var(--gray-600);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.plan-features {
+    list-style: none;
+    margin: 2rem 0;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.75rem;
+    color: var(--gray-700);
+}
+
+.plan-features li::before {
+    content: '✓';
+    color: var(--turquoise-500);
+    font-weight: bold;
+    margin-right: 0.75rem;
+    font-size: 1.125rem;
+}
+
+.plan-button {
+    width: 100%;
+    padding: 1rem;
+    background: var(--turquoise-400);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.plan-button:hover {
+    background: var(--turquoise-500);
+    transform: translateY(-2px);
+}
+
+.plan-button:active {
+    transform: translateY(0);
+}
+
+.plan-card.featured .plan-button {
+    background: var(--gray-800);
+}
+
+.plan-card.featured .plan-button:hover {
+    background: var(--gray-900);
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: #f0fff4;
+    border-left-color: var(--success-color);
+    color: #22543d;
+}
+
+.alert-danger {
+    background-color: #fff5f5;
+    border-left-color: var(--error-color);
+    color: #742a2a;
+}
+
+.alert-warning {
+    background-color: #fffbeb;
+    border-left-color: var(--warning-color);
+    color: #744210;
+}
+
+.alert-info {
+    background-color: #e6fffa;
+    border-left-color: var(--info-color);
+    color: #234e52;
+}
+
+@media (max-width: 768px) {
+    .plans-container {
+        margin: 1rem auto;
+    }
+    
+    .plans-header h1 {
+        font-size: 2rem;
+    }
+    
+    .plan-card.featured {
+        transform: none;
+    }
+    
+    .plans-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="plans-container">
+    <div class="plans-header">
+        <h1>Escolha seu Plano Memorial</h1>
+        <p>Crie um memorial digital único e receba uma placa QR Code personalizada para preservar memórias especiais</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="plans-grid">
+        {% for plan_id, plan in plans.items() %}
+        <div class="plan-card {% if plan_id == 'premium' %}featured{% endif %}">
+            <div class="plan-header">
+                <h3 class="plan-name">{{ plan.name }}</h3>
+                <div class="plan-price">
+                    <span class="currency">R$</span>{{ "%.2f" | format(plan.amount) }}
+                </div>
+                <p class="plan-description">{{ plan.description }}</p>
+            </div>
+            
+            <ul class="plan-features">
+                {% if plan_id == 'basic' %}
+                    <li>Memorial digital personalizado</li>
+                    <li>Galeria de fotos (até 50)</li>
+                    <li>Linha do tempo básica</li>
+                    <li>Placa QR Code física</li>
+                    <li>Suporte por email</li>
+                {% elif plan_id == 'premium' %}
+                    <li>Tudo do plano básico</li>
+                    <li>Galeria ilimitada de fotos</li>
+                    <li>Vídeos e áudios</li>
+                    <li>Livro de visitas</li>
+                    <li>Múltiplos administradores</li>
+                    <li>Suporte prioritário</li>
+                {% elif plan_id == 'family' %}
+                    <li>Tudo do plano premium</li>
+                    <li>Árvore genealógica</li>
+                    <li>Múltiplos memoriais</li>
+                    <li>Backup em nuvem</li>
+                    <li>Relatórios de acesso</li>
+                    <li>Suporte telefônico</li>
+                {% elif plan_id == 'pet_basic' %}
+                    <li>Memorial para pets</li>
+                    <li>Galeria de fotos (até 30)</li>
+                    <li>Histórias especiais</li>
+                    <li>Placa QR Code temática</li>
+                    <li>Suporte por email</li>
+                {% elif plan_id == 'pet_premium' %}
+                    <li>Tudo do pet básico</li>
+                    <li>Galeria ilimitada</li>
+                    <li>Vídeos e áudios</li>
+                    <li>Certificado digital</li>
+                    <li>Suporte prioritário</li>
+                {% endif %}
+            </ul>
+            
+            <form action="{{ url_for('payment.create_preference') }}" method="POST">
+                <input type="hidden" name="plan_id" value="{{ plan_id }}">
+                <button type="submit" class="plan-button">
+                    <i class="fas fa-shopping-cart"></i>
+                    Escolher Plano
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+

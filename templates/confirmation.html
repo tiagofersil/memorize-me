@@ -1,0 +1,823 @@
+{% extends "layout.html" %}
+
+{% block title %}Confirmação do Pedido - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="confirmation-container">
+    <!-- Header -->
+    <div class="confirmation-header">
+        <div class="header-content">
+            <div class="step-indicator">
+                <div class="step completed">
+                    <div class="step-number">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Pagamento</span>
+                </div>
+                <div class="step-divider completed"></div>
+                <div class="step completed">
+                    <div class="step-number">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Endereço</span>
+                </div>
+                <div class="step-divider completed"></div>
+                <div class="step completed">
+                    <div class="step-number">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Confirmação</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-banner">
+        <div class="success-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-text">
+                <h1>Pedido Confirmado!</h1>
+                <p>Seu pedido foi processado com sucesso. Em breve você receberá sua placa QR Code personalizada.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="confirmation-content">
+        <!-- Order Details -->
+        <div class="order-details-section">
+            <div class="details-card">
+                <h2 class="card-title">
+                    <i class="fas fa-clipboard-list"></i>
+                    Detalhes do Pedido
+                </h2>
+                
+                <div class="order-info">
+                    <div class="info-row">
+                        <span class="label">Número do Pedido:</span>
+                        <span class="value">#{{ payment_data.id if payment_data else 'MP-123456789' }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Data do Pedido:</span>
+                        <span class="value">{{ moment().format('DD/MM/YYYY HH:mm') }}</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="label">Status:</span>
+                        <span class="value status-approved">
+                            <i class="fas fa-check-circle"></i>
+                            Confirmado
+                        </span>
+                    </div>
+                </div>
+
+                <div class="order-items">
+                    <h3>Itens do Pedido</h3>
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="item-icon">
+                                <i class="fas fa-crown"></i>
+                            </div>
+                            <div class="item-details">
+                                <h4>{{ payment_data.plan_type.title() if payment_data else 'Plano Premium' }}</h4>
+                                <p>Memorial online completo</p>
+                            </div>
+                        </div>
+                        <div class="item-price">
+                            R$ {{ "%.2f"|format(payment_data.amount) if payment_data else '59,00' }}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="item-info">
+                            <div class="item-icon">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                            <div class="item-details">
+                                <h4>Placa QR Code Personalizada</h4>
+                                <p>Placa física resistente às intempéries</p>
+                            </div>
+                        </div>
+                        <div class="item-price">Grátis</div>
+                    </div>
+                </div>
+
+                <div class="order-total">
+                    <div class="total-row">
+                        <span class="label">Subtotal:</span>
+                        <span class="value">R$ {{ "%.2f"|format(payment_data.amount) if payment_data else '59,00' }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="label">Frete:</span>
+                        <span class="value">Grátis</span>
+                    </div>
+                    <div class="total-row final">
+                        <span class="label">Total:</span>
+                        <span class="value">R$ {{ "%.2f"|format(payment_data.amount) if payment_data else '59,00' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Information -->
+        <div class="shipping-info-section">
+            <div class="details-card">
+                <h2 class="card-title">
+                    <i class="fas fa-truck"></i>
+                    Informações de Entrega
+                </h2>
+                
+                {% if shipping_data %}
+                <div class="shipping-address">
+                    <h3>Endereço de Entrega</h3>
+                    <div class="address-details">
+                        <p><strong>{{ shipping_data.full_name }}</strong></p>
+                        <p>{{ shipping_data.street }}, {{ shipping_data.number }}</p>
+                        {% if shipping_data.complement %}
+                        <p>{{ shipping_data.complement }}</p>
+                        {% endif %}
+                        <p>{{ shipping_data.neighborhood }}</p>
+                        <p>{{ shipping_data.city }} - {{ shipping_data.state }}</p>
+                        <p>CEP: {{ shipping_data.cep }}</p>
+                        <p>Telefone: {{ shipping_data.phone }}</p>
+                    </div>
+                </div>
+
+                <div class="plate-customization">
+                    <h3>Personalização da Placa</h3>
+                    <div class="customization-details">
+                        <div class="detail-item">
+                            <span class="label">Nome:</span>
+                            <span class="value">{{ shipping_data.memorial_name }}</span>
+                        </div>
+                        {% if shipping_data.birth_date and shipping_data.death_date %}
+                        <div class="detail-item">
+                            <span class="label">Datas:</span>
+                            <span class="value">{{ shipping_data.birth_date }} - {{ shipping_data.death_date }}</span>
+                        </div>
+                        {% endif %}
+                        {% if shipping_data.memorial_message %}
+                        <div class="detail-item">
+                            <span class="label">Mensagem:</span>
+                            <span class="value">{{ shipping_data.memorial_message }}</span>
+                        </div>
+                        {% endif %}
+                        <div class="detail-item">
+                            <span class="label">Cor da Placa:</span>
+                            <span class="value">{{ shipping_data.plate_color.title() }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="shipping-timeline">
+                    <h3>Cronograma de Entrega</h3>
+                    <div class="timeline">
+                        <div class="timeline-item completed">
+                            <div class="timeline-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Pedido Confirmado</h4>
+                                <p>Hoje</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Produção da Placa</h4>
+                                <p>1-2 dias úteis</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Envio</h4>
+                                <p>3-4 dias úteis</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon">
+                                <i class="fas fa-home"></i>
+                            </div>
+                            <div class="timeline-content">
+                                <h4>Entrega</h4>
+                                <p>5-7 dias úteis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Next Steps -->
+    <div class="next-steps-section">
+        <div class="steps-card">
+            <h2 class="card-title">
+                <i class="fas fa-list-ol"></i>
+                Próximos Passos
+            </h2>
+            
+            <div class="steps-grid">
+                <div class="step-item">
+                    <div class="step-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="step-content">
+                        <h3>Confirmação por E-mail</h3>
+                        <p>Você receberá um e-mail de confirmação com todos os detalhes do seu pedido e código de rastreamento.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="step-content">
+                        <h3>Criar Memorial</h3>
+                        <p>Acesse sua conta para começar a criar o memorial online. Adicione fotos, textos e personalize como desejar.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="step-content">
+                        <h3>Acompanhar Entrega</h3>
+                        <p>Use o código de rastreamento para acompanhar o status da produção e entrega da sua placa QR Code.</p>
+                    </div>
+                </div>
+                
+                <div class="step-item">
+                    <div class="step-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <div class="step-content">
+                        <h3>Suporte</h3>
+                        <p>Nossa equipe está disponível para ajudar com qualquer dúvida sobre seu memorial ou entrega.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="/memorial/create" class="btn btn-primary">
+            <i class="fas fa-plus"></i>
+            Criar Memorial
+        </a>
+        <a href="/contact" class="btn btn-outline">
+            <i class="fas fa-phone"></i>
+            Falar Conosco
+        </a>
+        <a href="/" class="btn btn-outline">
+            <i class="fas fa-home"></i>
+            Voltar ao Início
+        </a>
+    </div>
+</div>
+
+<style>
+.confirmation-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+}
+
+/* Header */
+.confirmation-header {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+    box-shadow: var(--shadow);
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-4);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step.completed .step-number {
+    background: var(--success-color);
+    color: white;
+}
+
+.step span {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.step.completed span {
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.step-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gray-200);
+}
+
+.step-divider.completed {
+    background: var(--success-color);
+}
+
+/* Success Banner */
+.success-banner {
+    background: linear-gradient(135deg, var(--success-50), var(--success-100));
+    border: 1px solid var(--success-200);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+    text-align: center;
+}
+
+.success-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-4);
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--success-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-3xl);
+}
+
+.success-text h1 {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--success-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.success-text p {
+    font-size: var(--font-size-lg);
+    color: var(--success-700);
+    max-width: 600px;
+}
+
+/* Content */
+.confirmation-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+}
+
+.details-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+/* Order Details */
+.order-info {
+    margin-bottom: var(--spacing-6);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-3) 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row .label {
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.info-row .value {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.status-approved {
+    color: var(--success-color) !important;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.order-items {
+    margin-bottom: var(--spacing-6);
+}
+
+.order-items h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-3);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, var(--turquoise-400), var(--turquoise-500));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-base);
+}
+
+.item-details h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-1);
+}
+
+.item-details p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.item-price {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.order-total {
+    border-top: 1px solid var(--gray-200);
+    padding-top: var(--spacing-4);
+}
+
+.total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2);
+}
+
+.total-row.final {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    border-top: 1px solid var(--gray-200);
+    padding-top: var(--spacing-3);
+    margin-top: var(--spacing-3);
+}
+
+/* Shipping Information */
+.shipping-address,
+.plate-customization {
+    margin-bottom: var(--spacing-6);
+}
+
+.shipping-address h3,
+.plate-customization h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.address-details {
+    background: var(--gray-50);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+.address-details p {
+    margin-bottom: var(--spacing-2);
+    color: var(--gray-700);
+}
+
+.address-details p:last-child {
+    margin-bottom: 0;
+}
+
+.customization-details {
+    background: var(--gray-50);
+    padding: var(--spacing-4);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-2);
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item .label {
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.detail-item .value {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+/* Timeline */
+.shipping-timeline h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.timeline {
+    position: relative;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--gray-200);
+}
+
+.timeline-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.timeline-item:last-child {
+    margin-bottom: 0;
+}
+
+.timeline-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+    position: relative;
+    z-index: 1;
+}
+
+.timeline-item.completed .timeline-icon {
+    background: var(--success-color);
+    color: white;
+}
+
+.timeline-content h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-1);
+}
+
+.timeline-content p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+/* Next Steps */
+.next-steps-section {
+    margin-bottom: var(--spacing-8);
+}
+
+.steps-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+}
+
+.steps-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-6);
+}
+
+.step-item {
+    display: flex;
+    gap: var(--spacing-4);
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--gray-200);
+}
+
+.step-item .step-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(135deg, var(--turquoise-400), var(--turquoise-500));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+}
+
+.step-content h3 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.step-content p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-4);
+    flex-wrap: wrap;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--turquoise-600);
+    border: 2px solid var(--turquoise-400);
+}
+
+.btn-outline:hover {
+    background: var(--turquoise-50);
+    border-color: var(--turquoise-500);
+    transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .confirmation-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+    
+    .steps-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .success-content {
+        text-align: center;
+    }
+    
+    .success-text h1 {
+        font-size: var(--font-size-2xl);
+    }
+    
+    .step-indicator {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .step-divider {
+        width: 2px;
+        height: 30px;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    .confirmation-container {
+        padding: var(--spacing-4);
+    }
+    
+    .details-card,
+    .steps-card {
+        padding: var(--spacing-4);
+    }
+    
+    .success-banner {
+        padding: var(--spacing-6);
+    }
+    
+    .step-item {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+</style>
+
+{% endblock %}
+

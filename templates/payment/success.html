@@ -1,0 +1,228 @@
+{% extends 'layout.html' %}
+
+{% block title %}Pagamento Realizado com Sucesso{% endblock %}
+
+{% block extra_head %}
+<style>
+.success-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.success-icon {
+    color: var(--success-color);
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.success-title {
+    color: var(--gray-800);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.success-message {
+    color: var(--gray-600);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.next-steps {
+    background: var(--gray-50);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.next-steps h3 {
+    color: var(--gray-800);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+}
+
+.steps-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid var(--turquoise-400);
+}
+
+.step-number {
+    background: var(--turquoise-400);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.step-text {
+    color: var(--gray-700);
+    line-height: 1.5;
+}
+
+.btn-continue {
+    background: var(--turquoise-400);
+    color: white;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    margin-top: 1rem;
+}
+
+.btn-continue:hover {
+    background: var(--turquoise-500);
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+.payment-details {
+    background: white;
+    border: 2px solid var(--gray-100);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.payment-details h4 {
+    color: var(--gray-800);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.detail-value {
+    color: var(--gray-800);
+    font-weight: 600;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-icon">
+        <i class="fas fa-check-circle"></i>
+    </div>
+    
+    <h1 class="success-title">Pagamento Realizado com Sucesso!</h1>
+    
+    <p class="success-message">
+        Parabéns! Seu pagamento foi processado com sucesso. Agora você está a um passo de receber sua placa QR Code personalizada.
+    </p>
+
+    {% if request.args.get('payment_id') %}
+    <div class="payment-details">
+        <h4>Detalhes do Pagamento</h4>
+        <div class="detail-row">
+            <span class="detail-label">ID do Pagamento:</span>
+            <span class="detail-value">{{ request.args.get('payment_id') }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Status:</span>
+            <span class="detail-value">{{ request.args.get('status', 'Aprovado').title() }}</span>
+        </div>
+        {% if request.args.get('preference_id') %}
+        <div class="detail-row">
+            <span class="detail-label">Referência:</span>
+            <span class="detail-value">{{ request.args.get('preference_id') }}</span>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="next-steps">
+        <h3>Próximos Passos</h3>
+        <ul class="steps-list">
+            <li>
+                <span class="step-number">1</span>
+                <span class="step-text">
+                    <strong>Informe seu endereço:</strong> Clique no botão abaixo para preencher seus dados de entrega
+                </span>
+            </li>
+            <li>
+                <span class="step-number">2</span>
+                <span class="step-text">
+                    <strong>Produção da placa:</strong> Sua placa QR Code será produzida em até 3 dias úteis
+                </span>
+            </li>
+            <li>
+                <span class="step-number">3</span>
+                <span class="step-text">
+                    <strong>Envio:</strong> A placa será enviada pelos Correios com código de rastreamento
+                </span>
+            </li>
+            <li>
+                <span class="step-number">4</span>
+                <span class="step-text">
+                    <strong>Criação do memorial:</strong> Acesse sua conta para personalizar seu memorial digital
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <a href="{{ url_for('payment.address_form') }}" class="btn-continue">
+        <i class="fas fa-map-marker-alt"></i>
+        Informar Endereço de Entrega
+    </a>
+</div>
+{% endblock %}
+

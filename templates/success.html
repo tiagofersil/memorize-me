@@ -1,0 +1,197 @@
+{% extends "layout.html" %}
+
+{% block title %}Pagamento Realizado com Sucesso - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="success-container">
+    <div class="success-card">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        
+        <h1 class="success-title">Pagamento Realizado com Sucesso!</h1>
+        
+        <p class="success-message">
+            Obrigado por escolher o Memorial Online. Seu pagamento foi processado com sucesso 
+            e você receberá um email de confirmação em breve.
+        </p>
+        
+        <div class="payment-details">
+            <h3>Detalhes do Pagamento</h3>
+            <div class="detail-item">
+                <span class="label">Plano:</span>
+                <span class="value">Premium</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Valor:</span>
+                <span class="value">R$ 59,00</span>
+            </div>
+            <div class="detail-item">
+                <span class="label">Status:</span>
+                <span class="value status-approved">Aprovado</span>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>Próximos Passos</h3>
+            <ul>
+                <li>Você receberá um email com as instruções de acesso</li>
+                <li>Sua conta será ativada em até 24 horas</li>
+                <li>Acesse sua área do cliente para começar a criar seu memorial</li>
+            </ul>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="/" class="btn btn-primary">
+                <i class="fas fa-home"></i>
+                Voltar ao Início
+            </a>
+            <a href="/dashboard" class="btn btn-outline">
+                <i class="fas fa-user"></i>
+                Acessar Minha Conta
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.success-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-6);
+    background: linear-gradient(135deg, var(--turquoise-50) 0%, var(--green-50) 100%);
+}
+
+.success-card {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow-xl);
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+}
+
+.success-icon {
+    font-size: 4rem;
+    color: var(--green-500);
+    margin-bottom: var(--spacing-4);
+}
+
+.success-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+}
+
+.success-message {
+    font-size: 1.1rem;
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-6);
+    line-height: 1.6;
+}
+
+.payment-details {
+    background: var(--gray-50);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-4);
+    margin-bottom: var(--spacing-6);
+    text-align: left;
+}
+
+.payment-details h3 {
+    margin-bottom: var(--spacing-3);
+    color: var(--gray-800);
+    text-align: center;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-2) 0;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.label {
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.value {
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.status-approved {
+    color: var(--green-600);
+}
+
+.next-steps {
+    text-align: left;
+    margin-bottom: var(--spacing-6);
+}
+
+.next-steps h3 {
+    margin-bottom: var(--spacing-3);
+    color: var(--gray-800);
+    text-align: center;
+}
+
+.next-steps ul {
+    list-style: none;
+    padding: 0;
+}
+
+.next-steps li {
+    padding: var(--spacing-2) 0;
+    padding-left: var(--spacing-6);
+    position: relative;
+}
+
+.next-steps li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--green-500);
+    font-weight: bold;
+}
+
+.action-buttons {
+    display: flex;
+    gap: var(--spacing-4);
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    min-width: 180px;
+}
+
+@media (max-width: 768px) {
+    .success-card {
+        padding: var(--spacing-6);
+    }
+    
+    .success-title {
+        font-size: 1.5rem;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+    }
+}
+</style>
+{% endblock %}
+

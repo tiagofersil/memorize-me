@@ -1,0 +1,248 @@
+{% extends 'layout.html' %}
+
+{% block title %}Informar Endereço{% endblock %}
+
+{% block extra_head %}
+<style>
+.address-form-container {
+    max-width: 600px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.address-form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.address-form-header h1 {
+    color: var(--gray-800);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.address-form-header p {
+    color: var(--gray-600);
+    font-size: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--gray-700);
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--turquoise-400);
+    box-shadow: 0 0 0 3px rgba(79, 209, 199, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--turquoise-400);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn-submit:hover {
+    background: var(--turquoise-500);
+    transform: translateY(-1px);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.success-icon {
+    color: var(--turquoise-400);
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background-color: #f0fff4;
+    border-left-color: var(--success-color);
+    color: #22543d;
+}
+
+.alert-danger {
+    background-color: #fff5f5;
+    border-left-color: var(--error-color);
+    color: #742a2a;
+}
+
+.alert-warning {
+    background-color: #fffbeb;
+    border-left-color: var(--warning-color);
+    color: #744210;
+}
+
+.alert-info {
+    background-color: #e6fffa;
+    border-left-color: var(--info-color);
+    color: #234e52;
+}
+
+@media (max-width: 768px) {
+    .address-form-container {
+        margin: 1rem;
+        padding: 1.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="address-form-container">
+    <div class="address-form-header">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Pagamento Aprovado!</h1>
+        <p>Agora precisamos do seu endereço para enviar a placa QR Code personalizada</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form action="{{ url_for('payment.submit_address') }}" method="POST">
+        <div class="form-group">
+            <label for="street" class="form-label">Rua *</label>
+            <input type="text" class="form-control" id="street" name="street" required 
+                   placeholder="Ex: Rua das Flores">
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="number" class="form-label">Número *</label>
+                <input type="text" class="form-control" id="number" name="number" required 
+                       placeholder="Ex: 123">
+            </div>
+            <div class="form-group">
+                <label for="complement" class="form-label">Complemento</label>
+                <input type="text" class="form-control" id="complement" name="complement" 
+                       placeholder="Ex: Apto 45">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="neighborhood" class="form-label">Bairro *</label>
+            <input type="text" class="form-control" id="neighborhood" name="neighborhood" required 
+                   placeholder="Ex: Centro">
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label for="city" class="form-label">Cidade *</label>
+                <input type="text" class="form-control" id="city" name="city" required 
+                       placeholder="Ex: São Paulo">
+            </div>
+            <div class="form-group">
+                <label for="state" class="form-label">Estado *</label>
+                <input type="text" class="form-control" id="state" name="state" maxlength="2" required 
+                       placeholder="Ex: SP" style="text-transform: uppercase;">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="zip_code" class="form-label">CEP *</label>
+            <input type="text" class="form-control" id="zip_code" name="zip_code" required 
+                   placeholder="Ex: 01234-567" maxlength="9">
+        </div>
+        
+        <button type="submit" class="btn-submit">
+            <i class="fas fa-shipping-fast"></i>
+            Confirmar Endereço de Entrega
+        </button>
+    </form>
+</div>
+
+<script>
+// Máscara para CEP
+document.getElementById('zip_code').addEventListener('input', function(e) {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 5) {
+        value = value.substring(0, 5) + '-' + value.substring(5, 8);
+    }
+    e.target.value = value;
+});
+
+// Converter estado para maiúsculo
+document.getElementById('state').addEventListener('input', function(e) {
+    e.target.value = e.target.value.toUpperCase();
+});
+
+// Validação de formulário
+document.querySelector('form').addEventListener('submit', function(e) {
+    const requiredFields = ['street', 'number', 'neighborhood', 'city', 'state', 'zip_code'];
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        const input = document.getElementById(field);
+        if (!input.value.trim()) {
+            input.style.borderColor = 'var(--error-color)';
+            isValid = false;
+        } else {
+            input.style.borderColor = 'var(--gray-200)';
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Por favor, preencha todos os campos obrigatórios.');
+    }
+});
+</script>
+{% endblock %}
+
+

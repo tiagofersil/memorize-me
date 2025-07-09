@@ -1,0 +1,2166 @@
+{% extends "layout.html" %}
+
+{% block title %}Checkout - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="checkout-container">
+<<<<<<< HEAD
+    <!-- Header -->
+    <div class="checkout-header">
+        <div class="header-content">
+            <div class="step-indicator">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <span>Pagamento</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <span>Endereço</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Confirmação</span>
+=======
+    <!-- Header do Checkout -->
+    <div class="checkout-header">
+        <div class="header-content">
+            <h1 class="checkout-title">
+                <i class="fas fa-credit-card"></i>
+                Finalizar Pagamento
+            </h1>
+            <p class="checkout-subtitle">
+                Complete seu pagamento de forma segura e rápida
+            </p>
+        </div>
+        
+        <!-- Resumo do Plano -->
+        <div class="plan-summary" id="plan-summary">
+            <div class="summary-header">
+                <h3>Resumo do Pedido</h3>
+            </div>
+            <div class="summary-content">
+                <div class="plan-info">
+                    <div class="plan-name" id="selected-plan-name">Carregando...</div>
+                    <div class="plan-description" id="selected-plan-description">Carregando...</div>
+                </div>
+                <div class="plan-price">
+                    <span class="price-label">Total:</span>
+                    <span class="price-value" id="selected-plan-price">R$ 0,00</span>
+>>>>>>> afe9238 (fg)
+                </div>
+            </div>
+        </div>
+    </div>
+
+<<<<<<< HEAD
+    <div class="checkout-content">
+        <!-- Order Summary -->
+        <div class="order-summary">
+            <div class="summary-card">
+                <h2 class="summary-title">
+                    <i class="fas fa-receipt"></i>
+                    Resumo do Pedido
+                </h2>
+                
+                <div class="plan-details">
+                    <div class="plan-info">
+                        <div class="plan-icon">
+                            <i class="fas fa-crown" id="plan-icon"></i>
+                        </div>
+                        <div class="plan-text">
+                            <h3 id="plan-name">Plano Premium</h3>
+                            <p id="plan-description">Perfeito para famílias que querem mais recursos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="plan-features">
+                        <h4>Incluído no plano:</h4>
+                        <ul id="plan-features-list">
+                            <li><i class="fas fa-check"></i> 5 Memoriais</li>
+                            <li><i class="fas fa-check"></i> Fotos ilimitadas</li>
+                            <li><i class="fas fa-check"></i> Vídeos inclusos</li>
+                            <li><i class="fas fa-check"></i> QR Code premium</li>
+                            <li><i class="fas fa-check"></i> Suporte prioritário</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="price-breakdown">
+                    <div class="price-item">
+                        <span>Plano mensal</span>
+                        <span id="plan-price">R$ 59,00</span>
+                    </div>
+                    <div class="price-item">
+                        <span>Taxa de processamento</span>
+                        <span>Grátis</span>
+                    </div>
+                    <div class="price-divider"></div>
+                    <div class="price-total">
+                        <span>Total</span>
+                        <span id="total-price">R$ 59,00</span>
+                    </div>
+                </div>
+
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Pagamento 100% seguro</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="payment-section">
+            <div class="payment-card">
+                <h2 class="payment-title">
+                    <i class="fas fa-credit-card"></i>
+                    Forma de Pagamento
+                </h2>
+
+                <!-- Payment Methods Tabs -->
+                <div class="payment-methods">
+                    <button class="method-tab active" data-method="credit_card">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Cartão de Crédito</span>
+                    </button>
+                    <button class="method-tab" data-method="debit_card">
+                        <i class="fas fa-university"></i>
+                        <span>Cartão de Débito</span>
+                    </button>
+                    <button class="method-tab" data-method="pix">
+                        <i class="fas fa-qrcode"></i>
+                        <span>PIX</span>
+                    </button>
+                    <button class="method-tab" data-method="boleto">
+                        <i class="fas fa-barcode"></i>
+                        <span>Boleto</span>
+                    </button>
+                </div>
+
+                <!-- Payment Forms -->
+                <div id="payment-forms">
+                    <!-- Credit Card Form -->
+                    <div class="payment-form active" id="credit_card_form">
+                        <form id="form-checkout">
+                            <div class="form-group">
+                                <label for="form-checkout__cardNumber">Número do cartão</label>
+                                <input type="text" id="form-checkout__cardNumber" placeholder="0000 0000 0000 0000" />
+                                <div class="card-icons">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <i class="fab fa-cc-amex"></i>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="form-checkout__expirationDate">Validade</label>
+                                    <input type="text" id="form-checkout__expirationDate" placeholder="MM/AA" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="form-checkout__securityCode">CVV</label>
+                                    <input type="text" id="form-checkout__securityCode" placeholder="123" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="form-checkout__cardholderName">Nome no cartão</label>
+                                <input type="text" id="form-checkout__cardholderName" placeholder="Nome como está no cartão" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="form-checkout__cardholderEmail">E-mail</label>
+                                <input type="email" id="form-checkout__cardholderEmail" placeholder="seu@email.com" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="form-checkout__identificationType">Tipo de documento</label>
+                                <select id="form-checkout__identificationType">
+                                    <option value="">Selecione</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="form-checkout__identificationNumber">Número do documento</label>
+                                <input type="text" id="form-checkout__identificationNumber" placeholder="000.000.000-00" />
+                            </div>
+
+                            <div class="form-group" id="installments-container">
+                                <label for="form-checkout__installments">Parcelas</label>
+                                <select id="form-checkout__installments">
+                                    <option value="">Selecione o número de parcelas</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-pay" id="form-checkout__submit">
+                                <i class="fas fa-lock"></i>
+                                Finalizar Pagamento
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Debit Card Form -->
+                    <div class="payment-form" id="debit_card_form">
+                        <form id="form-checkout-debit">
+                            <div class="form-group">
+                                <label for="debit-cardNumber">Número do cartão</label>
+                                <input type="text" id="debit-cardNumber" placeholder="0000 0000 0000 0000" />
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="debit-expirationDate">Validade</label>
+                                    <input type="text" id="debit-expirationDate" placeholder="MM/AA" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="debit-securityCode">CVV</label>
+                                    <input type="text" id="debit-securityCode" placeholder="123" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="debit-cardholderName">Nome no cartão</label>
+                                <input type="text" id="debit-cardholderName" placeholder="Nome como está no cartão" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="debit-cardholderEmail">E-mail</label>
+                                <input type="email" id="debit-cardholderEmail" placeholder="seu@email.com" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="debit-identificationType">Tipo de documento</label>
+                                <select id="debit-identificationType">
+                                    <option value="">Selecione</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="debit-identificationNumber">Número do documento</label>
+                                <input type="text" id="debit-identificationNumber" placeholder="000.000.000-00" />
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-pay">
+                                <i class="fas fa-lock"></i>
+                                Pagar com Débito
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- PIX Form -->
+                    <div class="payment-form" id="pix_form">
+                        <div class="pix-info">
+                            <div class="pix-icon">
+                                <i class="fas fa-qrcode"></i>
+                            </div>
+                            <h3>Pagamento via PIX</h3>
+                            <p>Após confirmar, você receberá um QR Code para pagamento instantâneo</p>
+                        </div>
+
+                        <form id="form-checkout-pix">
+                            <div class="form-group">
+                                <label for="pix-email">E-mail</label>
+                                <input type="email" id="pix-email" placeholder="seu@email.com" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pix-identificationType">Tipo de documento</label>
+                                <select id="pix-identificationType" required>
+                                    <option value="">Selecione</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="pix-identificationNumber">Número do documento</label>
+                                <input type="text" id="pix-identificationNumber" placeholder="000.000.000-00" required />
+                            </div>
+
+                            <div class="pix-benefits">
+                                <div class="benefit-item">
+                                    <i class="fas fa-bolt"></i>
+                                    <span>Pagamento instantâneo</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <span>100% seguro</span>
+                                </div>
+                                <div class="benefit-item">
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span>Use seu celular</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-pay">
+                                <i class="fas fa-qrcode"></i>
+                                Gerar QR Code PIX
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Boleto Form -->
+                    <div class="payment-form" id="boleto_form">
+                        <div class="boleto-info">
+                            <div class="boleto-icon">
+                                <i class="fas fa-barcode"></i>
+                            </div>
+                            <h3>Pagamento via Boleto</h3>
+                            <p>O boleto será gerado após a confirmação e pode ser pago em até 3 dias úteis</p>
+                        </div>
+
+                        <form id="form-checkout-boleto">
+                            <div class="form-group">
+                                <label for="boleto-email">E-mail</label>
+                                <input type="email" id="boleto-email" placeholder="seu@email.com" required />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="boleto-identificationType">Tipo de documento</label>
+                                <select id="boleto-identificationType" required>
+                                    <option value="">Selecione</option>
+                                    <option value="CPF">CPF</option>
+                                    <option value="CNPJ">CNPJ</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="boleto-identificationNumber">Número do documento</label>
+                                <input type="text" id="boleto-identificationNumber" placeholder="000.000.000-00" required />
+                            </div>
+
+                            <div class="boleto-warning">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <strong>Importante:</strong>
+                                    <p>O boleto vence em 3 dias úteis. Após o pagamento, a ativação pode levar até 2 dias úteis.</p>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary btn-pay">
+                                <i class="fas fa-barcode"></i>
+                                Gerar Boleto
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="modal">
+        <div class="modal-content">
+            <div class="loading-spinner"></div>
+            <h3>Processando pagamento...</h3>
+            <p>Aguarde enquanto processamos sua transação</p>
+        </div>
+    </div>
+
+    <!-- PIX Modal -->
+    <div id="pix-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pagamento via PIX</h3>
+                <button class="modal-close" onclick="closePixModal()">&times;</button>
+            </div>
+            <div class="pix-content">
+                <div class="pix-qr-code">
+                    <div id="qr-code-container"></div>
+                </div>
+                <div class="pix-instructions">
+                    <h4>Como pagar:</h4>
+                    <ol>
+                        <li>Abra o app do seu banco</li>
+                        <li>Escolha a opção PIX</li>
+                        <li>Escaneie o QR Code ou copie o código</li>
+                        <li>Confirme o pagamento</li>
+                    </ol>
+                    <div class="pix-code">
+                        <label>Código PIX:</label>
+                        <div class="code-container">
+                            <input type="text" id="pix-code" readonly />
+                            <button onclick="copyPixCode()" class="btn-copy">
+                                <i class="fas fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pix-timer">
+                <i class="fas fa-clock"></i>
+                <span>Este QR Code expira em: <strong id="pix-countdown">30:00</strong></span>
+            </div>
+        </div>
+    </div>
+</div>
+
+=======
+    <!-- Container do Formulário de Pagamento -->
+    <div class="payment-container">
+        <div class="payment-form-wrapper">
+            <div class="form-header">
+                <h2>Dados do Pagamento</h2>
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Pagamento 100% Seguro</span>
+                </div>
+            </div>
+            
+            <!-- Container onde será renderizado o formulário do Mercado Pago -->
+            <div id="wallet_container" class="mp-wallet-container"></div>
+            
+            <!-- Loading State -->
+            <div id="loading-payment" class="loading-container">
+                <div class="loading-spinner"></div>
+                <p>Carregando formulário de pagamento...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="error-payment" class="error-container" style="display: none;">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Erro ao carregar pagamento</h3>
+                <p>Ocorreu um erro ao carregar o formulário de pagamento. Tente novamente.</p>
+                <button onclick="location.reload()" class="btn btn-primary">
+                    <i class="fas fa-redo"></i>
+                    Tentar Novamente
+                </button>
+            </div>
+        </div>
+        
+        <!-- Sidebar com informações de segurança -->
+        <div class="security-sidebar">
+            <div class="security-card">
+                <div class="security-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3>Pagamento Seguro</h3>
+                <p>Seus dados estão protegidos com criptografia SSL de 256 bits.</p>
+            </div>
+            
+            <div class="payment-methods">
+                <h4>Formas de Pagamento</h4>
+                <div class="methods-list">
+                    <div class="method">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Cartão de Crédito</span>
+                    </div>
+                    <div class="method">
+                        <i class="fas fa-university"></i>
+                        <span>Cartão de Débito</span>
+                    </div>
+                    <div class="method">
+                        <i class="fas fa-qrcode"></i>
+                        <span>PIX</span>
+                    </div>
+                    <div class="method">
+                        <i class="fas fa-barcode"></i>
+                        <span>Boleto</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="support-info">
+                <h4>Precisa de Ajuda?</h4>
+                <p>Nossa equipe está pronta para ajudar você.</p>
+                <a href="/contact" class="btn btn-outline btn-sm">
+                    <i class="fas fa-phone"></i>
+                    Falar Conosco
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Botão de Voltar -->
+    <div class="checkout-actions">
+        <a href="{{ url_for('payments.create_payment') }}" class="btn btn-outline">
+            <i class="fas fa-arrow-left"></i>
+            Voltar aos Planos
+        </a>
+    </div>
+</div>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+    // Configuração do Mercado Pago
+        const mp = new MercadoPago("{{ public_key }}", {
+        locale: "pt-BR"
+    });
+
+    // Dados dos planos
+    const PAYMENT_PLANS = {
+        "basic": {
+            "name": "Plano Básico",
+            "description": "Memorial básico com até 20 fotos e QR Code personalizado",
+            "amount": 29.00
+        },
+        "premium": {
+            "name": "Plano Premium", 
+            "description": "Memorial premium com fotos ilimitadas, vídeos e galeria avançada",
+            "amount": 59.00
+        },
+        "family": {
+            "name": "Plano Família",
+            "description": "Memorial familiar com recursos ilimitados e árvore genealógica",
+            "amount": 99.00
+        },
+        "pet_basic": {
+            "name": "Pet Básico",
+            "description": "Memorial especial para seu companheiro de quatro patas",
+            "amount": 19.90
+        },
+        "pet_premium": {
+            "name": "Pet Premium",
+            "description": "Memorial completo para seu pet com galeria de fotos e vídeos",
+            "amount": 29.90
+        }
+    };
+
+    // Função para obter parâmetros da URL
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    // Função para atualizar o resumo do plano
+    function updatePlanSummary(planType) {
+        const plan = PAYMENT_PLANS[planType];
+        if (plan) {
+            document.getElementById('selected-plan-name').textContent = plan.name;
+            document.getElementById('selected-plan-description').textContent = plan.description;
+            document.getElementById('selected-plan-price').textContent = `R$ ${plan.amount.toFixed(2).replace('.', ',')}`;
+        }
+    }
+
+    // Função para criar o checkout
+    async function createCheckout(planType) {
+        try {
+            // Mostrar loading
+            document.getElementById('loading-payment').style.display = 'block';
+            document.getElementById('error-payment').style.display = 'none';
+            
+            const response = await fetch("{{ url_for('payments.create_payment') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: `plan_type=${planType}`
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.preference_id) {
+                // Ocultar loading
+                document.getElementById('loading-payment').style.display = 'none';
+                
+                // Criar o formulário de pagamento
+                const bricksBuilder = mp.bricks();
+                bricksBuilder.create("wallet", "wallet_container", {
+                    initialization: {
+                        preferenceId: data.preference_id,
+                    },
+                    callbacks: {
+                        onReady: () => {
+                            console.log("Formulário de pagamento carregado com sucesso");
+                        },
+                        onError: (error) => {
+                            console.error("Erro no formulário de pagamento:", error);
+                            document.getElementById('loading-payment').style.display = 'none';
+                            document.getElementById('error-payment').style.display = 'block';
+                        },
+                    },
+                });
+            } else {
+                throw new Error(data.error || "Erro ao criar preferência de pagamento");
+            }
+        } catch (error) {
+            console.error("Erro na requisição:", error);
+            document.getElementById('loading-payment').style.display = 'none';
+            document.getElementById('error-payment').style.display = 'block';
+        }
+    }
+
+    // Inicializar a página
+    document.addEventListener('DOMContentLoaded', function() {
+        const planType = getUrlParameter('plan');
+        
+        if (planType && PAYMENT_PLANS[planType]) {
+            updatePlanSummary(planType);
+            createCheckout(planType);
+        } else {
+            // Redirecionar para seleção de planos se não houver plano válido
+            window.location.href = "{{ url_for('payments.create_payment') }}";
+        }
+    });
+</script>
+
+>>>>>>> afe9238 (fg)
+<style>
+.checkout-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+}
+
+<<<<<<< HEAD
+/* Header */
+.checkout-header {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+    box-shadow: var(--shadow);
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-4);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step.active .step-number {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.step span {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.step.active span {
+    color: var(--turquoise-600);
+    font-weight: 600;
+}
+
+.step-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gray-200);
+}
+
+/* Content Layout */
+.checkout-content {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-8);
+}
+
+/* Order Summary */
+.summary-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    height: fit-content;
+    position: sticky;
+    top: var(--spacing-6);
+}
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+=======
+/* Header do Checkout */
+.checkout-header {
+    background: linear-gradient(135deg, var(--turquoise-500) 0%, var(--turquoise-600) 100%);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-8);
+}
+
+.header-content {
+    flex: 1;
+}
+
+.checkout-title {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    margin-bottom: var(--spacing-3);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.checkout-subtitle {
+    font-size: var(--font-size-lg);
+    opacity: 0.9;
+}
+
+/* Resumo do Plano */
+.plan-summary {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    min-width: 300px;
+    backdrop-filter: blur(10px);
+}
+
+.summary-header h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin-bottom: var(--spacing-4);
+    color: white;
+}
+
+.summary-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+}
+
+.plan-info {
+    flex: 1;
+}
+
+.plan-name {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--spacing-2);
+    color: white;
+}
+
+.plan-description {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    color: white;
+}
+
+.plan-price {
+    text-align: right;
+}
+
+.price-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+    margin-bottom: var(--spacing-1);
+    color: white;
+}
+
+.price-value {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: white;
+}
+
+/* Container do Pagamento */
+.payment-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-8);
+    margin-bottom: var(--spacing-8);
+}
+
+.payment-form-wrapper {
+    background: white;
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-8);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+>>>>>>> afe9238 (fg)
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+<<<<<<< HEAD
+.plan-details {
+    margin-bottom: var(--spacing-6);
+}
+
+.plan-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.plan-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--border-radius-lg);
+    background: linear-gradient(135deg, var(--turquoise-400), var(--turquoise-500));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-lg);
+}
+
+.plan-text h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-1);
+}
+
+.plan-text p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.plan-features h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.plan-features ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.plan-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.plan-features li i {
+    color: var(--success-color);
+    font-size: var(--font-size-xs);
+}
+
+.price-breakdown {
+    border-top: 1px solid var(--gray-200);
+    padding-top: var(--spacing-4);
+}
+
+.price-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-3);
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.price-divider {
+    height: 1px;
+    background: var(--gray-200);
+    margin: var(--spacing-4) 0;
+}
+
+.price-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: var(--font-size-lg);
+=======
+.form-header h2 {
+    font-size: var(--font-size-xl);
+>>>>>>> afe9238 (fg)
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.security-badge {
+    display: flex;
+    align-items: center;
+<<<<<<< HEAD
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-6);
+    padding: var(--spacing-3);
+    background: var(--success-50);
+    border: 1px solid var(--success-200);
+    border-radius: var(--border-radius);
+    color: var(--success-700);
+=======
+    gap: var(--spacing-2);
+    background: var(--success-color);
+    color: white;
+    padding: var(--spacing-2) var(--spacing-4);
+    border-radius: var(--border-radius);
+>>>>>>> afe9238 (fg)
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+}
+
+<<<<<<< HEAD
+/* Payment Section */
+.payment-card {
+=======
+/* Container do Mercado Pago */
+.mp-wallet-container {
+    min-height: 400px;
+}
+
+/* Loading State */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-12);
+    text-align: center;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid var(--gray-200);
+    border-top: 4px solid var(--turquoise-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-4);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+    color: var(--gray-600);
+    font-size: var(--font-size-base);
+}
+
+/* Error State */
+.error-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-12);
+    text-align: center;
+}
+
+.error-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--error-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-4);
+}
+
+.error-container h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.error-container p {
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-6);
+}
+
+/* Sidebar de Segurança */
+.security-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-6);
+}
+
+.security-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    text-align: center;
+}
+
+.security-card .security-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--success-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-lg);
+    margin: 0 auto var(--spacing-4);
+}
+
+.security-card h3 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.security-card p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    line-height: 1.5;
+}
+
+.payment-methods {
+>>>>>>> afe9238 (fg)
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+}
+
+<<<<<<< HEAD
+.payment-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+/* Payment Methods Tabs */
+.payment-methods {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-2);
+    margin-bottom: var(--spacing-6);
+}
+
+.method-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+}
+
+.method-tab:hover {
+    background: var(--turquoise-50);
+    border-color: var(--turquoise-300);
+}
+
+.method-tab.active {
+    background: var(--turquoise-500);
+    border-color: var(--turquoise-500);
+    color: white;
+}
+
+.method-tab i {
+    font-size: var(--font-size-lg);
+}
+
+/* Payment Forms */
+.payment-form {
+    display: none;
+}
+
+.payment-form.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: var(--spacing-4);
+}
+
+.form-group label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-2);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: var(--spacing-3);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--turquoise-400);
+    box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.1);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--spacing-4);
+}
+
+.card-icons {
+    position: absolute;
+    right: var(--spacing-3);
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.card-icons i {
+    font-size: var(--font-size-lg);
+    color: var(--gray-400);
+}
+
+.form-group {
+    position: relative;
+}
+
+/* PIX and Boleto specific styles */
+.pix-info,
+.boleto-info {
+    text-align: center;
+    margin-bottom: var(--spacing-6);
+    padding: var(--spacing-6);
+    background: var(--turquoise-50);
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--turquoise-200);
+}
+
+.pix-icon,
+.boleto-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-lg);
+    background: var(--turquoise-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-2xl);
+    margin: 0 auto var(--spacing-4);
+}
+
+.pix-info h3,
+.boleto-info h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.pix-info p,
+.boleto-info p {
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.pix-benefits {
+    display: flex;
+    justify-content: space-around;
+    margin: var(--spacing-6) 0;
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+}
+
+.benefit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.benefit-item i {
+    color: var(--turquoise-500);
+    font-size: var(--font-size-lg);
+}
+
+.boleto-warning {
+    display: flex;
+    gap: var(--spacing-3);
+    padding: var(--spacing-4);
+    background: var(--warning-50);
+    border: 1px solid var(--warning-200);
+    border-radius: var(--border-radius);
+    margin: var(--spacing-4) 0;
+}
+
+.boleto-warning i {
+    color: var(--warning-600);
+    font-size: var(--font-size-lg);
+    margin-top: var(--spacing-1);
+}
+
+.boleto-warning strong {
+    color: var(--warning-800);
+    font-size: var(--font-size-sm);
+}
+
+.boleto-warning p {
+    color: var(--warning-700);
+    font-size: var(--font-size-sm);
+    margin: var(--spacing-1) 0 0;
+}
+
+/* Buttons */
+.btn-pay {
+    width: 100%;
+    padding: var(--spacing-4);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin-top: var(--spacing-6);
+}
+
+.btn {
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+=======
+.payment-methods h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-4);
+    text-align: center;
+}
+
+.methods-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-3);
+}
+
+.method {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    padding: var(--spacing-3);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.method i {
+    color: var(--turquoise-500);
+    width: 16px;
+    text-align: center;
+}
+
+.support-info {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    text-align: center;
+}
+
+.support-info h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.support-info p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-4);
+}
+
+/* Ações do Checkout */
+.checkout-actions {
+    text-align: center;
+}
+
+/* Botões */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-3) var(--spacing-6);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+>>>>>>> afe9238 (fg)
+}
+
+.btn-primary {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+<<<<<<< HEAD
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: var(--spacing-8);
+    border-radius: var(--border-radius-xl);
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: var(--shadow-2xl);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: var(--font-size-2xl);
+    cursor: pointer;
+    color: var(--gray-500);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-close:hover {
+    color: var(--gray-700);
+}
+
+/* Loading Modal */
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--gray-200);
+    border-top: 4px solid var(--turquoise-500);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--spacing-4);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.modal-content h3 {
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.modal-content p {
+    text-align: center;
+    color: var(--gray-600);
+    font-size: var(--font-size-sm);
+}
+
+/* PIX Modal */
+.pix-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+}
+
+.pix-qr-code {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed var(--gray-300);
+}
+
+.pix-instructions h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.pix-instructions ol {
+    padding-left: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.pix-instructions li {
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-2);
+}
+
+.pix-code {
+    margin-top: var(--spacing-4);
+}
+
+.pix-code label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-2);
+}
+
+.code-container {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.code-container input {
+    flex: 1;
+    padding: var(--spacing-2);
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-family: monospace;
+}
+
+.btn-copy {
+    padding: var(--spacing-2);
+    background: var(--turquoise-500);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-copy:hover {
+    background: var(--turquoise-600);
+}
+
+.pix-timer {
+    text-align: center;
+    margin-top: var(--spacing-6);
+    padding: var(--spacing-4);
+    background: var(--warning-50);
+    border: 1px solid var(--warning-200);
+    border-radius: var(--border-radius);
+    color: var(--warning-700);
+    font-size: var(--font-size-sm);
+=======
+.btn-outline {
+    background: transparent;
+    color: var(--turquoise-600);
+    border: 2px solid var(--turquoise-400);
+}
+
+.btn-outline:hover {
+    background: var(--turquoise-50);
+    border-color: var(--turquoise-500);
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--font-size-xs);
+>>>>>>> afe9238 (fg)
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+<<<<<<< HEAD
+    .checkout-content {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+    
+    .order-summary {
+        order: 2;
+    }
+    
+    .payment-section {
+        order: 1;
+    }
+    
+    .payment-methods {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .step-indicator {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .step-divider {
+        width: 2px;
+        height: 30px;
+    }
+    
+    .pix-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .pix-benefits {
+        flex-direction: column;
+        gap: var(--spacing-3);
+    }
+}
+
+@media (max-width: 480px) {
+=======
+>>>>>>> afe9238 (fg)
+    .checkout-container {
+        padding: var(--spacing-4);
+    }
+    
+<<<<<<< HEAD
+    .payment-methods {
+        grid-template-columns: 1fr;
+    }
+    
+    .method-tab {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .modal-content {
+        margin: 10% auto;
+        padding: var(--spacing-6);
+    }
+}
+</style>
+
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<script>
+// Configuração do Mercado Pago
+const mp = new MercadoPago('{{ public_key }}', {
+    locale: 'pt-BR'
+});
+
+// Dados do plano selecionado
+const planData = {
+    basic: {
+        name: 'Plano Básico',
+        description: 'Ideal para memoriais simples e pessoais',
+        price: 29.00,
+        icon: 'fas fa-seedling',
+        features: [
+            '1 Memorial',
+            'Até 20 fotos',
+            'QR Code personalizado',
+            'Biografia completa',
+            'Mensagem da família',
+            'Suporte básico'
+        ]
+    },
+    premium: {
+        name: 'Plano Premium',
+        description: 'Perfeito para famílias que querem mais recursos',
+        price: 59.00,
+        icon: 'fas fa-crown',
+        features: [
+            '5 Memoriais',
+            'Fotos ilimitadas',
+            'Vídeos inclusos',
+            'QR Code premium',
+            'Galeria avançada',
+            'Backup automático',
+            'Suporte prioritário'
+        ]
+    },
+    family: {
+        name: 'Plano Família',
+        description: 'Solução completa para grandes famílias',
+        price: 99.00,
+        icon: 'fas fa-users',
+        features: [
+            'Memoriais ilimitados',
+            'Tudo do Premium',
+            'Árvore genealógica',
+            'Múltiplos administradores',
+            'Backup vitalício',
+            'Relatórios detalhados',
+            'Suporte 24/7'
+        ]
+    },
+    pet_basic: {
+        name: 'Pet Básico',
+        description: 'Memorial especial para seu companheiro de quatro patas',
+        price: 19.90,
+        icon: 'fas fa-paw',
+        features: [
+            '1 Memorial para Pet',
+            'Até 15 fotos',
+            'QR Code personalizado',
+            'Biografia do pet',
+            'Mensagem da família',
+            'Suporte básico'
+        ]
+    },
+    pet_premium: {
+        name: 'Pet Premium',
+        description: 'Memorial completo para seu pet com galeria de fotos e vídeos',
+        price: 29.90,
+        icon: 'fas fa-crown',
+        features: [
+            'Memorial ilimitado para pets',
+            'Fotos ilimitadas',
+            'Vídeos inclusos',
+            'QR Code premium',
+            'Galeria avançada',
+            'Backup automático',
+            'Suporte prioritário'
+        ]
+    }
+};
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    // Obter tipo de plano da URL ou localStorage
+    const urlParams = new URLSearchParams(window.location.search);
+    const planType = urlParams.get('plan') || localStorage.getItem('selectedPlan') || 'premium';
+    
+    updatePlanDisplay(planType);
+    initializePaymentMethods();
+    initializeCreditCardForm();
+});
+
+// Atualizar exibição do plano
+function updatePlanDisplay(planType) {
+    const plan = planData[planType];
+    if (!plan) return;
+    
+    document.getElementById('plan-name').textContent = plan.name;
+    document.getElementById('plan-description').textContent = plan.description;
+    document.getElementById('plan-price').textContent = `R$ ${plan.price.toFixed(2).replace('.', ',')}`;
+    document.getElementById('total-price').textContent = `R$ ${plan.price.toFixed(2).replace('.', ',')}`;
+    
+    const iconElement = document.getElementById('plan-icon');
+    iconElement.className = plan.icon;
+    
+    const featuresList = document.getElementById('plan-features-list');
+    featuresList.innerHTML = plan.features.map(feature => 
+        `<li><i class="fas fa-check"></i> ${feature}</li>`
+    ).join('');
+    
+    // Salvar no localStorage
+    localStorage.setItem('selectedPlan', planType);
+    localStorage.setItem('planPrice', plan.price);
+}
+
+// Inicializar métodos de pagamento
+function initializePaymentMethods() {
+    const methodTabs = document.querySelectorAll('.method-tab');
+    const paymentForms = document.querySelectorAll('.payment-form');
+    
+    methodTabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            const method = this.dataset.method;
+            
+            // Atualizar tabs
+            methodTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            
+            // Atualizar forms
+            paymentForms.forEach(form => form.classList.remove('active'));
+            document.getElementById(method + '_form').classList.add('active');
+        });
+    });
+}
+
+// Inicializar formulário de cartão de crédito
+function initializeCreditCardForm() {
+    const cardForm = mp.cardForm({
+        amount: localStorage.getItem('planPrice') || '59.00',
+        iframe: true,
+        form: {
+            id: "form-checkout",
+            cardNumber: {
+                id: "form-checkout__cardNumber",
+                placeholder: "Número do cartão",
+            },
+            expirationDate: {
+                id: "form-checkout__expirationDate",
+                placeholder: "MM/YY",
+            },
+            securityCode: {
+                id: "form-checkout__securityCode",
+                placeholder: "Código de segurança",
+            },
+            cardholderName: {
+                id: "form-checkout__cardholderName",
+                placeholder: "Titular do cartão",
+            },
+            issuer: {
+                id: "form-checkout__issuer",
+                placeholder: "Banco emissor",
+            },
+            installments: {
+                id: "form-checkout__installments",
+                placeholder: "Parcelas",
+            },
+            identificationType: {
+                id: "form-checkout__identificationType",
+                placeholder: "Tipo de documento",
+            },
+            identificationNumber: {
+                id: "form-checkout__identificationNumber",
+                placeholder: "Número do documento",
+            },
+            cardholderEmail: {
+                id: "form-checkout__cardholderEmail",
+                placeholder: "E-mail",
+            },
+        },
+        callbacks: {
+            onFormMounted: error => {
+                if (error) return console.warn("Form Mounted handling error: ", error);
+                console.log("Form mounted");
+            },
+            onSubmit: event => {
+                event.preventDefault();
+                
+                const {
+                    paymentMethodId: payment_method_id,
+                    issuerId: issuer_id,
+                    cardholderEmail: email,
+                    amount,
+                    token,
+                    installments,
+                    identificationNumber,
+                    identificationType,
+                } = cardForm.getCardFormData();
+                
+                processPayment({
+                    token,
+                    issuer_id,
+                    payment_method_id,
+                    transaction_amount: Number(amount),
+                    installments: Number(installments),
+                    description: document.getElementById('plan-name').textContent,
+                    payer: {
+                        email,
+                        identification: {
+                            type: identificationType,
+                            number: identificationNumber,
+                        }
+                    }
+                });
+            },
+            onFetching: (resource) => {
+                console.log("Fetching resource: ", resource);
+                
+                // Animate progress bar
+                const progressBar = document.querySelector(".progress-bar");
+                progressBar.removeAttribute("value");
+                
+                return () => {
+                    progressBar.setAttribute("value", "0");
+                };
+            }
+        },
+    });
+}
+
+// Processar pagamento
+function processPayment(paymentData) {
+    showLoadingModal();
+    
+    fetch('/api/process_payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoadingModal();
+        
+        if (data.status === 'approved') {
+            // Pagamento aprovado
+            window.location.href = '/shipping-address?payment_id=' + data.id;
+        } else if (data.status === 'pending') {
+            // Pagamento pendente
+            showPaymentPendingModal(data);
+        } else {
+            // Pagamento rejeitado
+            showPaymentErrorModal(data.status_detail);
+        }
+    })
+    .catch(error => {
+        hideLoadingModal();
+        console.error('Error:', error);
+        showPaymentErrorModal('Erro interno do servidor');
+    });
+}
+
+// Processar PIX
+function processPIXPayment() {
+    const email = document.getElementById('pix-email').value;
+    const identificationType = document.getElementById('pix-identificationType').value;
+    const identificationNumber = document.getElementById('pix-identificationNumber').value;
+    
+    if (!email || !identificationType || !identificationNumber) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    
+    showLoadingModal();
+    
+    const paymentData = {
+        transaction_amount: Number(localStorage.getItem('planPrice')),
+        description: document.getElementById('plan-name').textContent,
+        payment_method_id: 'pix',
+        payer: {
+            email: email,
+            identification: {
+                type: identificationType,
+                number: identificationNumber,
+            }
+        }
+    };
+    
+    fetch('/api/process_payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoadingModal();
+        
+        if (data.status === 'pending' && data.point_of_interaction) {
+            showPixModal(data.point_of_interaction.transaction_data);
+        } else {
+            showPaymentErrorModal('Erro ao gerar PIX');
+        }
+    })
+    .catch(error => {
+        hideLoadingModal();
+        console.error('Error:', error);
+        showPaymentErrorModal('Erro interno do servidor');
+    });
+}
+
+// Processar Boleto
+function processBoletoPayment() {
+    const email = document.getElementById('boleto-email').value;
+    const identificationType = document.getElementById('boleto-identificationType').value;
+    const identificationNumber = document.getElementById('boleto-identificationNumber').value;
+    
+    if (!email || !identificationType || !identificationNumber) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    
+    showLoadingModal();
+    
+    const paymentData = {
+        transaction_amount: Number(localStorage.getItem('planPrice')),
+        description: document.getElementById('plan-name').textContent,
+        payment_method_id: 'bolbradesco',
+        payer: {
+            email: email,
+            identification: {
+                type: identificationType,
+                number: identificationNumber,
+            }
+        }
+    };
+    
+    fetch('/api/process_payment', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoadingModal();
+        
+        if (data.status === 'pending' && data.transaction_details) {
+            // Abrir boleto em nova aba
+            window.open(data.transaction_details.external_resource_url, '_blank');
+            // Redirecionar para página de confirmação
+            setTimeout(() => {
+                window.location.href = '/shipping-address?payment_id=' + data.id;
+            }, 2000);
+        } else {
+            showPaymentErrorModal('Erro ao gerar boleto');
+        }
+    })
+    .catch(error => {
+        hideLoadingModal();
+        console.error('Error:', error);
+        showPaymentErrorModal('Erro interno do servidor');
+    });
+}
+
+// Event listeners para PIX e Boleto
+document.getElementById('form-checkout-pix').addEventListener('submit', function(e) {
+    e.preventDefault();
+    processPIXPayment();
+});
+
+document.getElementById('form-checkout-boleto').addEventListener('submit', function(e) {
+    e.preventDefault();
+    processBoletoPayment();
+});
+
+// Modais
+function showLoadingModal() {
+    document.getElementById('loading-modal').style.display = 'block';
+}
+
+function hideLoadingModal() {
+    document.getElementById('loading-modal').style.display = 'none';
+}
+
+function showPixModal(transactionData) {
+    const modal = document.getElementById('pix-modal');
+    const qrCodeContainer = document.getElementById('qr-code-container');
+    const pixCodeInput = document.getElementById('pix-code');
+    
+    // Gerar QR Code
+    qrCodeContainer.innerHTML = `<img src="data:image/png;base64,${transactionData.qr_code_base64}" alt="QR Code PIX" style="max-width: 200px;">`;
+    pixCodeInput.value = transactionData.qr_code;
+    
+    modal.style.display = 'block';
+    
+    // Iniciar countdown
+    startPixCountdown(30 * 60); // 30 minutos
+}
+
+function closePixModal() {
+    document.getElementById('pix-modal').style.display = 'none';
+}
+
+function copyPixCode() {
+    const pixCodeInput = document.getElementById('pix-code');
+    pixCodeInput.select();
+    document.execCommand('copy');
+    
+    // Feedback visual
+    const copyBtn = document.querySelector('.btn-copy');
+    const originalText = copyBtn.innerHTML;
+    copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+    copyBtn.style.background = 'var(--success-color)';
+    
+    setTimeout(() => {
+        copyBtn.innerHTML = originalText;
+        copyBtn.style.background = 'var(--turquoise-500)';
+    }, 2000);
+}
+
+function startPixCountdown(seconds) {
+    const countdownElement = document.getElementById('pix-countdown');
+    
+    const interval = setInterval(() => {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        
+        countdownElement.textContent = 
+            `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+        
+        if (seconds <= 0) {
+            clearInterval(interval);
+            closePixModal();
+            alert('QR Code PIX expirado. Por favor, gere um novo.');
+        }
+        
+        seconds--;
+    }, 1000);
+}
+
+function showPaymentErrorModal(error) {
+    alert('Erro no pagamento: ' + error);
+}
+
+function showPaymentPendingModal(data) {
+    alert('Pagamento pendente. Você receberá uma confirmação por email.');
+    window.location.href = '/shipping-address?payment_id=' + data.id;
+}
+
+// Máscaras para inputs
+document.addEventListener('DOMContentLoaded', function() {
+    // Máscara para CPF/CNPJ
+    const cpfInputs = document.querySelectorAll('input[id*="identificationNumber"]');
+    cpfInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            } else {
+                value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+            }
+            this.value = value;
+        });
+    });
+    
+    // Máscara para cartão
+    const cardInputs = document.querySelectorAll('input[id*="cardNumber"]');
+    cardInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            this.value = value;
+        });
+    });
+    
+    // Máscara para data de expiração
+    const expInputs = document.querySelectorAll('input[id*="expirationDate"]');
+    expInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            value = value.replace(/(\d{2})(\d{2})/, '$1/$2');
+            this.value = value;
+        });
+    });
+});
+</script>
+
+=======
+    .checkout-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .checkout-title {
+        font-size: var(--font-size-2xl);
+        justify-content: center;
+    }
+    
+    .payment-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .security-sidebar {
+        order: -1;
+    }
+    
+    .payment-form-wrapper {
+        padding: var(--spacing-6);
+    }
+    
+    .form-header {
+        flex-direction: column;
+        gap: var(--spacing-3);
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .summary-content {
+        flex-direction: column;
+        gap: var(--spacing-3);
+    }
+    
+    .plan-price {
+        text-align: left;
+    }
+    
+    .checkout-header {
+        padding: var(--spacing-6);
+    }
+    
+    .payment-form-wrapper {
+        padding: var(--spacing-4);
+    }
+}
+</style>
+
+>>>>>>> afe9238 (fg)
+{% endblock %}
+

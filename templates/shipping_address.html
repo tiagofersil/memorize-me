@@ -1,0 +1,1272 @@
+{% extends "layout.html" %}
+
+{% block title %}Endereço de Entrega - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="shipping-container">
+    <!-- Header -->
+    <div class="shipping-header">
+        <div class="header-content">
+            <div class="step-indicator">
+                <div class="step completed">
+                    <div class="step-number">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span>Pagamento</span>
+                </div>
+                <div class="step-divider completed"></div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <span>Endereço</span>
+                </div>
+                <div class="step-divider"></div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <span>Confirmação</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="shipping-content">
+        <!-- Success Message -->
+        <div class="success-message">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="success-text">
+                <h2>Pagamento Aprovado!</h2>
+                <p>Seu pagamento foi processado com sucesso. Agora precisamos do seu endereço para enviar a placa QR Code personalizada.</p>
+            </div>
+        </div>
+
+        <div class="content-grid">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <div class="summary-card">
+                    <h3 class="summary-title">
+                        <i class="fas fa-box"></i>
+                        Resumo do Pedido
+                    </h3>
+                    
+                    <div class="order-details">
+                        <div class="order-item">
+                            <div class="item-info">
+                                <div class="item-icon">
+                                    <i class="fas fa-crown" id="plan-icon"></i>
+                                </div>
+                                <div class="item-text">
+                                    <h4 id="plan-name">Plano Premium</h4>
+                                    <p id="plan-description">Memorial online completo</p>
+                                </div>
+                            </div>
+                            <div class="item-price" id="plan-price">R$ 59,00</div>
+                        </div>
+                        
+                        <div class="order-item">
+                            <div class="item-info">
+                                <div class="item-icon">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div class="item-text">
+                                    <h4>Placa QR Code</h4>
+                                    <p>Placa física resistente às intempéries</p>
+                                </div>
+                            </div>
+                            <div class="item-price">Grátis</div>
+                        </div>
+                    </div>
+
+                    <div class="shipping-info">
+                        <h4>
+                            <i class="fas fa-truck"></i>
+                            Informações de Entrega
+                        </h4>
+                        <div class="shipping-details">
+                            <div class="shipping-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Prazo: 5-7 dias úteis</span>
+                            </div>
+                            <div class="shipping-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Frete grátis para todo Brasil</span>
+                            </div>
+                            <div class="shipping-item">
+                                <i class="fas fa-box-open"></i>
+                                <span>Embalagem segura</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-info">
+                        <h4>
+                            <i class="fas fa-credit-card"></i>
+                            Pagamento
+                        </h4>
+                        <div class="payment-status approved">
+                            <i class="fas fa-check-circle"></i>
+                            <span>Aprovado</span>
+                        </div>
+                        <div class="payment-id">
+                            ID: <span id="payment-id">{{ payment_id or 'MP-123456789' }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Form -->
+            <div class="shipping-form-section">
+                <div class="form-card">
+                    <h2 class="form-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        Endereço de Entrega
+                    </h2>
+                    
+                    <form id="shipping-form" method="POST" action="{{ url_for('payments.save_shipping_address') }}">
+                        <input type="hidden" name="payment_id" value="{{ payment_id }}" />
+                        
+                        <!-- Dados Pessoais -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-user"></i>
+                                Dados Pessoais
+                            </h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="full_name">Nome completo *</label>
+                                    <input type="text" id="full_name" name="full_name" required 
+                                           placeholder="Seu nome completo" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Telefone *</label>
+                                    <input type="tel" id="phone" name="phone" required 
+                                           placeholder="(11) 99999-9999" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="email">E-mail *</label>
+                                    <input type="email" id="email" name="email" required 
+                                           placeholder="seu@email.com" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="document">CPF/CNPJ *</label>
+                                    <input type="text" id="document" name="document" required 
+                                           placeholder="000.000.000-00" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Endereço -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-home"></i>
+                                Endereço de Entrega
+                            </h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group cep-group">
+                                    <label for="cep">CEP *</label>
+                                    <div class="input-with-button">
+                                        <input type="text" id="cep" name="cep" required 
+                                               placeholder="00000-000" />
+                                        <button type="button" id="search-cep" class="btn-search-cep">
+                                            <i class="fas fa-search"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">Estado *</label>
+                                    <select id="state" name="state" required>
+                                        <option value="">Selecione</option>
+                                        <option value="AC">Acre</option>
+                                        <option value="AL">Alagoas</option>
+                                        <option value="AP">Amapá</option>
+                                        <option value="AM">Amazonas</option>
+                                        <option value="BA">Bahia</option>
+                                        <option value="CE">Ceará</option>
+                                        <option value="DF">Distrito Federal</option>
+                                        <option value="ES">Espírito Santo</option>
+                                        <option value="GO">Goiás</option>
+                                        <option value="MA">Maranhão</option>
+                                        <option value="MT">Mato Grosso</option>
+                                        <option value="MS">Mato Grosso do Sul</option>
+                                        <option value="MG">Minas Gerais</option>
+                                        <option value="PA">Pará</option>
+                                        <option value="PB">Paraíba</option>
+                                        <option value="PR">Paraná</option>
+                                        <option value="PE">Pernambuco</option>
+                                        <option value="PI">Piauí</option>
+                                        <option value="RJ">Rio de Janeiro</option>
+                                        <option value="RN">Rio Grande do Norte</option>
+                                        <option value="RS">Rio Grande do Sul</option>
+                                        <option value="RO">Rondônia</option>
+                                        <option value="RR">Roraima</option>
+                                        <option value="SC">Santa Catarina</option>
+                                        <option value="SP">São Paulo</option>
+                                        <option value="SE">Sergipe</option>
+                                        <option value="TO">Tocantins</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="city">Cidade *</label>
+                                    <input type="text" id="city" name="city" required 
+                                           placeholder="Nome da cidade" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="neighborhood">Bairro *</label>
+                                    <input type="text" id="neighborhood" name="neighborhood" required 
+                                           placeholder="Nome do bairro" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group flex-2">
+                                    <label for="street">Rua/Avenida *</label>
+                                    <input type="text" id="street" name="street" required 
+                                           placeholder="Nome da rua ou avenida" />
+                                </div>
+                                <div class="form-group">
+                                    <label for="number">Número *</label>
+                                    <input type="text" id="number" name="number" required 
+                                           placeholder="123" />
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="complement">Complemento</label>
+                                    <input type="text" id="complement" name="complement" 
+                                           placeholder="Apto, casa, bloco..." />
+                                </div>
+                                <div class="form-group">
+                                    <label for="reference">Referência</label>
+                                    <input type="text" id="reference" name="reference" 
+                                           placeholder="Próximo ao..." />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personalização da Placa -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-palette"></i>
+                                Personalização da Placa QR Code
+                            </h3>
+                            
+                            <div class="plate-customization">
+                                <div class="customization-preview">
+                                    <div class="plate-preview">
+                                        <div class="plate-header">
+                                            <h4 id="preview-name">Nome da Pessoa</h4>
+                                            <p id="preview-dates">1950 - 2024</p>
+                                        </div>
+                                        <div class="plate-qr">
+                                            <div class="qr-placeholder">
+                                                <i class="fas fa-qrcode"></i>
+                                            </div>
+                                        </div>
+                                        <div class="plate-footer">
+                                            <p id="preview-message">Mensagem personalizada</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="customization-form">
+                                    <div class="form-group">
+                                        <label for="memorial_name">Nome para a placa *</label>
+                                        <input type="text" id="memorial_name" name="memorial_name" required 
+                                               placeholder="Nome que aparecerá na placa" />
+                                    </div>
+                                    
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label for="birth_date">Data de nascimento</label>
+                                            <input type="date" id="birth_date" name="birth_date" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="death_date">Data de falecimento</label>
+                                            <input type="date" id="death_date" name="death_date" />
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="memorial_message">Mensagem personalizada</label>
+                                        <textarea id="memorial_message" name="memorial_message" 
+                                                  placeholder="Uma mensagem especial para aparecer na placa (máx. 100 caracteres)"
+                                                  maxlength="100" rows="3"></textarea>
+                                        <div class="char-counter">
+                                            <span id="char-count">0</span>/100 caracteres
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="plate_color">Cor da placa</label>
+                                        <div class="color-options">
+                                            <label class="color-option">
+                                                <input type="radio" name="plate_color" value="black" checked />
+                                                <div class="color-preview black"></div>
+                                                <span>Preto</span>
+                                            </label>
+                                            <label class="color-option">
+                                                <input type="radio" name="plate_color" value="white" />
+                                                <div class="color-preview white"></div>
+                                                <span>Branco</span>
+                                            </label>
+                                            <label class="color-option">
+                                                <input type="radio" name="plate_color" value="gold" />
+                                                <div class="color-preview gold"></div>
+                                                <span>Dourado</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div class="form-section">
+                            <h3 class="section-title">
+                                <i class="fas fa-comment"></i>
+                                Observações Adicionais
+                            </h3>
+                            
+                            <div class="form-group">
+                                <label for="observations">Observações para entrega</label>
+                                <textarea id="observations" name="observations" 
+                                          placeholder="Instruções especiais para entrega, horário preferencial, etc."
+                                          rows="4"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Termos -->
+                        <div class="form-section">
+                            <div class="terms-section">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="terms" name="terms" required />
+                                    <span class="checkmark"></span>
+                                    <span class="terms-text">
+                                        Concordo com os <a href="/terms" target="_blank">termos de uso</a> 
+                                        e <a href="/privacy" target="_blank">política de privacidade</a>
+                                    </span>
+                                </label>
+                                
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="newsletter" name="newsletter" />
+                                    <span class="checkmark"></span>
+                                    <span class="terms-text">
+                                        Desejo receber novidades e promoções por e-mail
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-submit">
+                                <i class="fas fa-check"></i>
+                                Finalizar Pedido
+                            </button>
+                            <p class="submit-note">
+                                Ao finalizar, você receberá um e-mail de confirmação com o código de rastreamento
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.shipping-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-6);
+}
+
+/* Header */
+.shipping-header {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+    box-shadow: var(--shadow);
+}
+
+.step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-4);
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.step.completed .step-number {
+    background: var(--success-color);
+    color: white;
+}
+
+.step.active .step-number {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.step span {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-weight: 500;
+}
+
+.step.completed span,
+.step.active span {
+    color: var(--turquoise-600);
+    font-weight: 600;
+}
+
+.step-divider {
+    width: 60px;
+    height: 2px;
+    background: var(--gray-200);
+}
+
+.step-divider.completed {
+    background: var(--success-color);
+}
+
+/* Success Message */
+.success-message {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-6);
+    background: linear-gradient(135deg, var(--success-50), var(--success-100));
+    border: 1px solid var(--success-200);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    margin-bottom: var(--spacing-8);
+}
+
+.success-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--border-radius-lg);
+    background: var(--success-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-2xl);
+    flex-shrink: 0;
+}
+
+.success-text h2 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--success-800);
+    margin-bottom: var(--spacing-2);
+}
+
+.success-text p {
+    color: var(--success-700);
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: var(--spacing-8);
+}
+
+/* Order Summary */
+.summary-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+    height: fit-content;
+    position: sticky;
+    top: var(--spacing-6);
+}
+
+.summary-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.order-details {
+    margin-bottom: var(--spacing-6);
+}
+
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-4);
+    background: var(--gray-50);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-3);
+}
+
+.item-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+}
+
+.item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, var(--turquoise-400), var(--turquoise-500));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: var(--font-size-base);
+}
+
+.item-text h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-1);
+}
+
+.item-text p {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+}
+
+.item-price {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+}
+
+.shipping-info,
+.payment-info {
+    margin-bottom: var(--spacing-6);
+    padding-top: var(--spacing-4);
+    border-top: 1px solid var(--gray-200);
+}
+
+.shipping-info h4,
+.payment-info h4 {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-3);
+}
+
+.shipping-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-2);
+}
+
+.shipping-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+.shipping-item i {
+    color: var(--turquoise-500);
+    width: 16px;
+}
+
+.payment-status {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-2);
+    padding: var(--spacing-2) var(--spacing-3);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    margin-bottom: var(--spacing-2);
+}
+
+.payment-status.approved {
+    background: var(--success-50);
+    color: var(--success-700);
+    border: 1px solid var(--success-200);
+}
+
+.payment-id {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    font-family: monospace;
+}
+
+/* Form */
+.form-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-6);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--gray-200);
+}
+
+.form-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-8);
+    padding-bottom: var(--spacing-4);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.form-section {
+    margin-bottom: var(--spacing-8);
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-3);
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--gray-800);
+    margin-bottom: var(--spacing-6);
+    padding-bottom: var(--spacing-3);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-4);
+    margin-bottom: var(--spacing-4);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-4);
+}
+
+.form-group.flex-2 {
+    grid-column: span 1;
+}
+
+.form-group label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--gray-700);
+    margin-bottom: var(--spacing-2);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: var(--spacing-3);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--turquoise-400);
+    box-shadow: 0 0 0 3px rgba(56, 178, 172, 0.1);
+}
+
+.input-with-button {
+    display: flex;
+    gap: var(--spacing-2);
+}
+
+.input-with-button input {
+    flex: 1;
+}
+
+.btn-search-cep {
+    padding: var(--spacing-3);
+    background: var(--turquoise-500);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-search-cep:hover {
+    background: var(--turquoise-600);
+}
+
+/* Plate Customization */
+.plate-customization {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-6);
+}
+
+.customization-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-6);
+    background: var(--gray-50);
+    border-radius: var(--border-radius-lg);
+    border: 2px dashed var(--gray-300);
+}
+
+.plate-preview {
+    width: 200px;
+    height: 280px;
+    background: #2a2a2a;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-4);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.plate-preview.white {
+    background: white;
+    color: #2a2a2a;
+    border: 2px solid var(--gray-200);
+}
+
+.plate-preview.gold {
+    background: linear-gradient(135deg, #d4af37, #ffd700);
+    color: #2a2a2a;
+}
+
+.plate-header {
+    text-align: center;
+}
+
+.plate-header h4 {
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    margin-bottom: var(--spacing-1);
+}
+
+.plate-header p {
+    font-size: var(--font-size-sm);
+    opacity: 0.8;
+}
+
+.plate-qr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+}
+
+.qr-placeholder {
+    width: 80px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-2xl);
+}
+
+.plate-preview.white .qr-placeholder {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.plate-footer {
+    text-align: center;
+}
+
+.plate-footer p {
+    font-size: var(--font-size-xs);
+    opacity: 0.8;
+    line-height: 1.3;
+}
+
+.char-counter {
+    text-align: right;
+    font-size: var(--font-size-xs);
+    color: var(--gray-500);
+    margin-top: var(--spacing-1);
+}
+
+.color-options {
+    display: flex;
+    gap: var(--spacing-4);
+}
+
+.color-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-2);
+    cursor: pointer;
+}
+
+.color-option input {
+    display: none;
+}
+
+.color-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    border: 3px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.color-preview.black {
+    background: #2a2a2a;
+}
+
+.color-preview.white {
+    background: white;
+    border-color: var(--gray-300);
+}
+
+.color-preview.gold {
+    background: linear-gradient(135deg, #d4af37, #ffd700);
+}
+
+.color-option input:checked + .color-preview {
+    border-color: var(--turquoise-500);
+    transform: scale(1.1);
+}
+
+.color-option span {
+    font-size: var(--font-size-sm);
+    color: var(--gray-700);
+}
+
+/* Terms */
+.terms-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-4);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-3);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    line-height: 1.5;
+}
+
+.checkbox-label input {
+    display: none;
+}
+
+.checkmark {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gray-300);
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.checkbox-label input:checked + .checkmark {
+    background: var(--turquoise-500);
+    border-color: var(--turquoise-500);
+}
+
+.checkbox-label input:checked + .checkmark::after {
+    content: '✓';
+    color: white;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.terms-text {
+    color: var(--gray-700);
+}
+
+.terms-text a {
+    color: var(--turquoise-600);
+    text-decoration: none;
+}
+
+.terms-text a:hover {
+    text-decoration: underline;
+}
+
+/* Form Actions */
+.form-actions {
+    text-align: center;
+    padding-top: var(--spacing-6);
+    border-top: 1px solid var(--gray-200);
+}
+
+.btn-submit {
+    width: 100%;
+    max-width: 300px;
+    padding: var(--spacing-4);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-2);
+    margin: 0 auto var(--spacing-3);
+}
+
+.submit-note {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    text-align: center;
+}
+
+/* Buttons */
+.btn {
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: var(--turquoise-500);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--turquoise-600);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-6);
+    }
+    
+    .order-summary {
+        order: 2;
+    }
+    
+    .shipping-form-section {
+        order: 1;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .plate-customization {
+        grid-template-columns: 1fr;
+    }
+    
+    .success-message {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .step-indicator {
+        flex-direction: column;
+        gap: var(--spacing-2);
+    }
+    
+    .step-divider {
+        width: 2px;
+        height: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    .shipping-container {
+        padding: var(--spacing-4);
+    }
+    
+    .form-card,
+    .summary-card {
+        padding: var(--spacing-4);
+    }
+    
+    .color-options {
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Inicializar dados do plano
+    initializePlanData();
+    
+    // Máscaras para inputs
+    initializeMasks();
+    
+    // Preview da placa
+    initializePlatePreview();
+    
+    // Busca CEP
+    initializeCepSearch();
+    
+    // Contador de caracteres
+    initializeCharCounter();
+});
+
+// Inicializar dados do plano
+function initializePlanData() {
+    const planData = {
+        basic: { name: 'Plano Básico', price: 'R$ 29,00', icon: 'fas fa-seedling' },
+        premium: { name: 'Plano Premium', price: 'R$ 59,00', icon: 'fas fa-crown' },
+        family: { name: 'Plano Família', price: 'R$ 99,00', icon: 'fas fa-users' },
+        pet_basic: { name: 'Pet Básico', price: 'R$ 19,90', icon: 'fas fa-paw' },
+        pet_premium: { name: 'Pet Premium', price: 'R$ 29,90', icon: 'fas fa-crown' }
+    };
+    
+    const selectedPlan = localStorage.getItem('selectedPlan') || 'premium';
+    const plan = planData[selectedPlan];
+    
+    if (plan) {
+        document.getElementById('plan-name').textContent = plan.name;
+        document.getElementById('plan-price').textContent = plan.price;
+        document.getElementById('plan-icon').className = plan.icon;
+    }
+}
+
+// Inicializar máscaras
+function initializeMasks() {
+    // Máscara para telefone
+    const phoneInput = document.getElementById('phone');
+    phoneInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+        this.value = value;
+    });
+    
+    // Máscara para CPF/CNPJ
+    const documentInput = document.getElementById('document');
+    documentInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        if (value.length <= 11) {
+            value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        } else {
+            value = value.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+        }
+        this.value = value;
+    });
+    
+    // Máscara para CEP
+    const cepInput = document.getElementById('cep');
+    cepInput.addEventListener('input', function() {
+        let value = this.value.replace(/\D/g, '');
+        value = value.replace(/(\d{5})(\d{3})/, '$1-$2');
+        this.value = value;
+    });
+}
+
+// Inicializar preview da placa
+function initializePlatePreview() {
+    const nameInput = document.getElementById('memorial_name');
+    const birthDateInput = document.getElementById('birth_date');
+    const deathDateInput = document.getElementById('death_date');
+    const messageInput = document.getElementById('memorial_message');
+    const colorInputs = document.querySelectorAll('input[name="plate_color"]');
+    
+    const previewName = document.getElementById('preview-name');
+    const previewDates = document.getElementById('preview-dates');
+    const previewMessage = document.getElementById('preview-message');
+    const platePreview = document.querySelector('.plate-preview');
+    
+    // Atualizar nome
+    nameInput.addEventListener('input', function() {
+        previewName.textContent = this.value || 'Nome da Pessoa';
+    });
+    
+    // Atualizar datas
+    function updateDates() {
+        const birthDate = birthDateInput.value ? new Date(birthDateInput.value).getFullYear() : '';
+        const deathDate = deathDateInput.value ? new Date(deathDateInput.value).getFullYear() : '';
+        
+        if (birthDate && deathDate) {
+            previewDates.textContent = `${birthDate} - ${deathDate}`;
+        } else if (birthDate) {
+            previewDates.textContent = `${birthDate} - `;
+        } else {
+            previewDates.textContent = '1950 - 2024';
+        }
+    }
+    
+    birthDateInput.addEventListener('change', updateDates);
+    deathDateInput.addEventListener('change', updateDates);
+    
+    // Atualizar mensagem
+    messageInput.addEventListener('input', function() {
+        previewMessage.textContent = this.value || 'Mensagem personalizada';
+    });
+    
+    // Atualizar cor
+    colorInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            platePreview.className = 'plate-preview ' + this.value;
+        });
+    });
+}
+
+// Inicializar busca de CEP
+function initializeCepSearch() {
+    const cepInput = document.getElementById('cep');
+    const searchButton = document.getElementById('search-cep');
+    
+    searchButton.addEventListener('click', function() {
+        const cep = cepInput.value.replace(/\D/g, '');
+        
+        if (cep.length !== 8) {
+            alert('CEP deve ter 8 dígitos');
+            return;
+        }
+        
+        // Mostrar loading
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        this.disabled = true;
+        
+        // Buscar CEP
+        fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.erro) {
+                    alert('CEP não encontrado');
+                } else {
+                    document.getElementById('street').value = data.logradouro;
+                    document.getElementById('neighborhood').value = data.bairro;
+                    document.getElementById('city').value = data.localidade;
+                    document.getElementById('state').value = data.uf;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao buscar CEP:', error);
+                alert('Erro ao buscar CEP');
+            })
+            .finally(() => {
+                this.innerHTML = '<i class="fas fa-search"></i>';
+                this.disabled = false;
+            });
+    });
+    
+    // Buscar automaticamente quando CEP for preenchido
+    cepInput.addEventListener('blur', function() {
+        const cep = this.value.replace(/\D/g, '');
+        if (cep.length === 8) {
+            searchButton.click();
+        }
+    });
+}
+
+// Inicializar contador de caracteres
+function initializeCharCounter() {
+    const messageInput = document.getElementById('memorial_message');
+    const charCount = document.getElementById('char-count');
+    
+    messageInput.addEventListener('input', function() {
+        charCount.textContent = this.value.length;
+        
+        if (this.value.length > 80) {
+            charCount.style.color = 'var(--warning-600)';
+        } else if (this.value.length > 90) {
+            charCount.style.color = 'var(--error-color)';
+        } else {
+            charCount.style.color = 'var(--gray-500)';
+        }
+    });
+}
+
+// Validação do formulário
+document.getElementById('shipping-form').addEventListener('submit', function(e) {
+    const requiredFields = this.querySelectorAll('input[required], select[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.style.borderColor = 'var(--error-color)';
+            isValid = false;
+        } else {
+            field.style.borderColor = 'var(--gray-200)';
+        }
+    });
+    
+    if (!isValid) {
+        e.preventDefault();
+        alert('Por favor, preencha todos os campos obrigatórios');
+        return;
+    }
+    
+    // Validar CEP
+    const cep = document.getElementById('cep').value.replace(/\D/g, '');
+    if (cep.length !== 8) {
+        e.preventDefault();
+        alert('CEP deve ter 8 dígitos');
+        return;
+    }
+    
+    // Validar termos
+    if (!document.getElementById('terms').checked) {
+        e.preventDefault();
+        alert('Você deve concordar com os termos de uso');
+        return;
+    }
+    
+    // Mostrar loading no botão
+    const submitBtn = this.querySelector('.btn-submit');
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+    submitBtn.disabled = true;
+});
+</script>
+
+{% endblock %}
+

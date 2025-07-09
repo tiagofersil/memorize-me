@@ -1,0 +1,277 @@
+{% extends 'layout.html' %}
+
+{% block title %}Pagamento Pendente{% endblock %}
+
+{% block extra_head %}
+<style>
+.pending-container {
+    max-width: 600px;
+    margin: 3rem auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.pending-icon {
+    color: var(--warning-color);
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.pending-title {
+    color: var(--gray-800);
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.pending-message {
+    color: var(--gray-600);
+    font-size: 1.125rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.status-card {
+    background: var(--gray-50);
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 2rem 0;
+    border-left: 4px solid var(--warning-color);
+}
+
+.status-card h3 {
+    color: var(--gray-800);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.status-list {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+}
+
+.status-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 8px;
+}
+
+.status-icon {
+    color: var(--warning-color);
+    margin-right: 1rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.status-text {
+    color: var(--gray-700);
+    line-height: 1.5;
+}
+
+.next-steps {
+    background: white;
+    border: 2px solid var(--gray-100);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    text-align: left;
+}
+
+.next-steps h4 {
+    color: var(--gray-800);
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.steps-list {
+    list-style: none;
+    padding: 0;
+}
+
+.steps-list li {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+    background: var(--gray-50);
+    border-radius: 8px;
+}
+
+.step-number {
+    background: var(--warning-color);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-right: 1rem;
+    flex-shrink: 0;
+}
+
+.step-text {
+    color: var(--gray-700);
+    line-height: 1.5;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.btn {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--turquoise-400);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--turquoise-500);
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+.btn-secondary:hover {
+    background: var(--gray-300);
+    transform: translateY(-2px);
+    color: var(--gray-700);
+    text-decoration: none;
+}
+
+.alert-info {
+    background: #e6fffa;
+    border: 1px solid var(--turquoise-200);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    color: var(--gray-700);
+}
+
+.alert-info i {
+    color: var(--turquoise-400);
+    margin-right: 0.5rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="pending-container">
+    <div class="pending-icon">
+        <i class="fas fa-clock"></i>
+    </div>
+    
+    <h1 class="pending-title">Pagamento Pendente</h1>
+    
+    <p class="pending-message">
+        Seu pagamento está sendo processado. Isso pode levar alguns minutos, dependendo do método de pagamento escolhido.
+    </p>
+
+    <div class="alert-info">
+        <i class="fas fa-info-circle"></i>
+        <strong>Não se preocupe!</strong> Você receberá uma notificação assim que o pagamento for confirmado.
+    </div>
+
+    <div class="status-card">
+        <h3>Status Atual</h3>
+        <ul class="status-list">
+            <li>
+                <i class="fas fa-credit-card status-icon"></i>
+                <span class="status-text">
+                    <strong>Pagamento enviado:</strong> Seus dados foram enviados para processamento
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-hourglass-half status-icon"></i>
+                <span class="status-text">
+                    <strong>Aguardando confirmação:</strong> O banco está validando as informações
+                </span>
+            </li>
+            <li>
+                <i class="fas fa-bell status-icon"></i>
+                <span class="status-text">
+                    <strong>Notificação automática:</strong> Você será avisado quando o pagamento for aprovado
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="next-steps">
+        <h4>O que acontece agora?</h4>
+        <ul class="steps-list">
+            <li>
+                <span class="step-number">1</span>
+                <span class="step-text">
+                    <strong>Aguarde a confirmação:</strong> O processamento pode levar de alguns minutos a 24 horas
+                </span>
+            </li>
+            <li>
+                <span class="step-number">2</span>
+                <span class="step-text">
+                    <strong>Receba a notificação:</strong> Você será notificado por email quando o pagamento for aprovado
+                </span>
+            </li>
+            <li>
+                <span class="step-number">3</span>
+                <span class="step-text">
+                    <strong>Informe seu endereço:</strong> Após a aprovação, você poderá informar o endereço de entrega
+                </span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="action-buttons">
+        <a href="{{ url_for('index') }}" class="btn btn-primary">
+            <i class="fas fa-home"></i>
+            Voltar ao Início
+        </a>
+        <a href="{{ url_for('payment.select_plan') }}" class="btn btn-secondary">
+            <i class="fas fa-list"></i>
+            Ver Planos
+        </a>
+    </div>
+</div>
+{% endblock %}
+

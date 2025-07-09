@@ -1,0 +1,30 @@
+{% extends "loyout.html" %}
+
+{% block title %}Pagamento Rejeitado - Memorial Online{% endblock %}
+
+{% block content %}
+<div class="main-card text-center">
+    <div class="card-header">
+        <h1 class="card-title text-error">❌ Pagamento Não Aprovado</h1>
+    </div>
+    <div class="card-body">
+        <p class="text-lg text-gray-700 mb-6">Infelizmente, seu pagamento não pôde ser processado. Isso pode acontecer por diversos motivos.</p>
+        
+        <div class="possible-causes mb-8">
+            <h3 class="text-xl font-semibold mb-4">Possíveis causas:</h3>
+            <ul class="list-disc list-inside text-left mx-auto" style="max-width: 400px;">
+                <li class="mb-2">Dados do cartão incorretos</li>
+                <li class="mb-2">Limite insuficiente</li>
+                <li class="mb-2">Problema temporário com o processador</li>
+                <li>Cartão bloqueado ou vencido</li>
+            </ul>
+        </div>
+        
+        <div class="actions flex justify-center gap-4">
+            <a href="/payments/create" class="btn btn-primary btn-lg">Tentar Novamente</a>
+            <a href="/profile" class="btn btn-secondary btn-lg">Voltar ao Perfil</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
